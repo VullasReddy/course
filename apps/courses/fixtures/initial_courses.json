@@ -1,0 +1,985 @@
+[
+{
+  "model": "courses.category",
+  "pk": 5,
+  "fields": {
+    "name": "Python Development",
+    "slug": "python-development",
+    "description": "Master Python full stack ecosystem.",
+    "icon": "fa-code"
+  }
+},
+{
+  "model": "courses.category",
+  "pk": 6,
+  "fields": {
+    "name": "Web Development",
+    "slug": "web-development",
+    "description": "Modern web development technologies.",
+    "icon": "fa-laptop-code"
+  }
+},
+{
+  "model": "courses.category",
+  "pk": 7,
+  "fields": {
+    "name": "Databases & SQL",
+    "slug": "databases-sql",
+    "description": "Enterprise database management systems and SQL query optimization.",
+    "icon": "fa-database"
+  }
+},
+{
+  "model": "courses.category",
+  "pk": 8,
+  "fields": {
+    "name": "AI & Data Science",
+    "slug": "ai-data-science",
+    "description": "Artificial intelligence, machine learning, and data analytics.",
+    "icon": "fa-brain"
+  }
+},
+{
+  "model": "courses.instructor",
+  "pk": 4,
+  "fields": {
+    "name": "Dr. Alan Turing",
+    "designation": "Principal AI Scientist",
+    "bio": "Specialist in AI, neural networks, and machine learning architectures.",
+    "experience_years": 15
+  }
+},
+{
+  "model": "courses.instructor",
+  "pk": 5,
+  "fields": {
+    "name": "Rajesh Kumar",
+    "designation": "Senior Full-Stack Architect",
+    "bio": "Expert in Python Django REST framework, Web development, and SQL databases.",
+    "experience_years": 12
+  }
+},
+{
+  "model": "courses.instructor",
+  "pk": 6,
+  "fields": {
+    "name": "Ananya Verma",
+    "designation": "Lead Database Architect",
+    "bio": "Database Administrator & SQL Optimization consultant managing high-concurrency enterprise SQL systems with 14+ years experience.",
+    "experience_years": 14
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 6,
+  "fields": {
+    "title": "Python Full Stack Development",
+    "course_code": "PY-FS-101",
+    "slug": "python-full-stack-development",
+    "short_description": "Complete end-to-end Python Full Stack development covering Python core, Django, REST APIs, database integration, and modern frontend.",
+    "description": "Complete end-to-end Python Full Stack development covering Python core, Django, REST APIs, database integration, and modern frontend. Hands-on enterprise modules, real-world case studies, and complete project labs.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop&q=60",
+    "category": 5,
+    "instructor": 5,
+    "difficulty": "Intermediate",
+    "duration_hours": "24.0",
+    "rating": "4.95",
+    "requirements": "• Basic computer literacy\n• Dedication to complete all video lessons and practical coding exercises.",
+    "learning_objectives": "• Master Python Full Stack Development enterprise best practices.\n• Build production-ready projects.\n• Earn an official verified completion certificate.",
+    "status": "published",
+    "is_featured": true,
+    "created_at": "2026-09-30T11:22:52.173Z"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 7,
+  "fields": {
+    "title": "Web Development",
+    "course_code": "WEB-101",
+    "slug": "web-development",
+    "short_description": "Master foundational and modern Web Development with HTML5, CSS3, JavaScript ES6+, responsive design layouts, and API integration.",
+    "description": "Master foundational and modern Web Development with HTML5, CSS3, JavaScript ES6+, responsive design layouts, and API integration. Hands-on enterprise modules, real-world case studies, and complete project labs.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=60",
+    "category": 6,
+    "instructor": 5,
+    "difficulty": "Beginner",
+    "duration_hours": "18.0",
+    "rating": "4.88",
+    "requirements": "• Basic computer literacy\n• Dedication to complete all video lessons and practical coding exercises.",
+    "learning_objectives": "• Master Web Development enterprise best practices.\n• Build production-ready projects.\n• Earn an official verified completion certificate.",
+    "status": "published",
+    "is_featured": true,
+    "created_at": "2026-09-30T11:22:52.257Z"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 8,
+  "fields": {
+    "title": "DBMS with SQL",
+    "course_code": "SQL-101",
+    "slug": "dbms-with-sql",
+    "short_description": "Comprehensive DBMS architecture and enterprise SQL masterclass covering relational schema design, complex joins, indexing, and query optimization.",
+    "description": "Comprehensive DBMS architecture and enterprise SQL masterclass covering relational schema design, complex joins, indexing, and query optimization. Hands-on enterprise modules, real-world case studies, and complete project labs.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&auto=format&fit=crop&q=60",
+    "category": 7,
+    "instructor": 5,
+    "difficulty": "Intermediate",
+    "duration_hours": "16.0",
+    "rating": "4.91",
+    "requirements": "• Basic computer literacy\n• Dedication to complete all video lessons and practical coding exercises.",
+    "learning_objectives": "• Master DBMS with SQL enterprise best practices.\n• Build production-ready projects.\n• Earn an official verified completion certificate.",
+    "status": "published",
+    "is_featured": true,
+    "created_at": "2026-09-30T11:22:52.327Z"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 9,
+  "fields": {
+    "title": "AI with Data Science",
+    "course_code": "AI-DS-101",
+    "slug": "ai-with-data-science",
+    "short_description": "Master Artificial Intelligence and Data Science pipeline engineering using Python, Pandas, NumPy, Machine Learning algorithms, and Neural Networks.",
+    "description": "Master Artificial Intelligence and Data Science pipeline engineering using Python, Pandas, NumPy, Machine Learning algorithms, and Neural Networks. Hands-on enterprise modules, real-world case studies, and complete project labs.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&auto=format&fit=crop&q=60",
+    "category": 8,
+    "instructor": 4,
+    "difficulty": "Advanced",
+    "duration_hours": "28.0",
+    "rating": "4.96",
+    "requirements": "• Basic computer literacy\n• Dedication to complete all video lessons and practical coding exercises.",
+    "learning_objectives": "• Master AI with Data Science enterprise best practices.\n• Build production-ready projects.\n• Earn an official verified completion certificate.",
+    "status": "published",
+    "is_featured": true,
+    "created_at": "2026-09-30T11:22:52.389Z"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 10,
+  "fields": {
+    "title": "SQL Mastery — Complete SQL Course",
+    "course_code": "SQL-MASTERY",
+    "slug": "sql-mastery-complete-sql-course",
+    "short_description": "Master Relational Databases, SQL Queries, Joins, Window Functions, CTEs, Transactions, and Database Optimization from Beginner to Advanced.",
+    "description": "The definitive SQL masterclass for ARSHITH BOOTCAMP. Learn database design, complex joins, data manipulation, aggregations, subqueries, window functions, CTEs, triggers, transactions, and interview preparation with 140 practical lessons, hands-on labs, interactive SQL playground, and verified certificate.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&auto=format&fit=crop&q=80",
+    "category": 7,
+    "instructor": 6,
+    "difficulty": "Beginner",
+    "duration_hours": "20.0",
+    "rating": "4.98",
+    "requirements": "• No prior database experience required.\n• Computer with a browser.\n• Dedication to practice hands-on SQL queries.",
+    "learning_objectives": "• Write production-grade SQL queries for MySQL, PostgreSQL & SQL Server.\n• Master INNER, LEFT, RIGHT, FULL, SELF & CROSS JOINs with visual clarity.\n• Implement Window Functions (RANK, DENSE_RANK, ROW_NUMBER) & CTEs.\n• Execute ACID Transactions & build scalable database schemas.\n• Ace top enterprise SQL technical interview questions.",
+    "status": "published",
+    "is_featured": true,
+    "created_at": "2026-09-30T11:22:52.555Z"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 107,
+  "fields": {
+    "course": 6,
+    "title": "Module 1: Python Core & OOP Fundamentals",
+    "description": null,
+    "order": 1,
+    "pdf_file": "courses/python-full-stack/module-01-introduction-to-python.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 108,
+  "fields": {
+    "course": 6,
+    "title": "Module 2: Django Web Framework & ORM",
+    "description": null,
+    "order": 2,
+    "pdf_file": "courses/python-full-stack/module-02-strings-input-output-and-branching.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 109,
+  "fields": {
+    "course": 6,
+    "title": "Module 3: Django REST Framework APIs",
+    "description": null,
+    "order": 3,
+    "pdf_file": "courses/python-full-stack/module-03-iteration.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 110,
+  "fields": {
+    "course": 7,
+    "title": "Module 1: HTML5 & Semantic Web Structure",
+    "description": null,
+    "order": 1,
+    "pdf_file": "courses/web-development/module-01-html-basics-and-structure.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 111,
+  "fields": {
+    "course": 7,
+    "title": "Module 2: CSS3 Styling & Flexbox/Grid Layouts",
+    "description": null,
+    "order": 2,
+    "pdf_file": "courses/web-development/module-02-html-text-formatting-and-links.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 112,
+  "fields": {
+    "course": 7,
+    "title": "Module 3: JavaScript ES6+ & DOM Logic",
+    "description": null,
+    "order": 3,
+    "pdf_file": "courses/web-development/module-03-html-media-images-audio-video.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 113,
+  "fields": {
+    "course": 8,
+    "title": "Module 1: Relational Database Architecture",
+    "description": null,
+    "order": 1,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 114,
+  "fields": {
+    "course": 8,
+    "title": "Module 2: Enterprise SQL Queries & Joins",
+    "description": null,
+    "order": 2,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 115,
+  "fields": {
+    "course": 8,
+    "title": "Module 3: Indexing, Transactions & Optimization",
+    "description": null,
+    "order": 3,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 116,
+  "fields": {
+    "course": 9,
+    "title": "Module 1: Data Science Foundations with Python",
+    "description": null,
+    "order": 1,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 117,
+  "fields": {
+    "course": 9,
+    "title": "Module 2: Machine Learning Algorithms",
+    "description": null,
+    "order": 2,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 118,
+  "fields": {
+    "course": 9,
+    "title": "Module 3: Artificial Intelligence & Neural Nets",
+    "description": null,
+    "order": 3,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 119,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 1 — GETTING STARTED WITH SQL",
+    "description": "Focus on introducing SQL, relational database management systems, language parts, tools, comments, and SQL keywords.",
+    "order": 1,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 120,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 2 — SQL ENVIRONMENT SETUP",
+    "description": "Step-by-step installation guides for Microsoft SQL Server, MySQL Workbench, and Linux Ubuntu environments.",
+    "order": 2,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 121,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 3 — DATABASES AND TABLES",
+    "description": "Database and table creation concepts, data types, NULL attributes, and schema inspection.",
+    "order": 3,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 122,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 4 — KEYS AND CONSTRAINTS",
+    "description": "Relational integrity, primary keys, foreign keys, table constraints, identity auto-increment, and index introduction.",
+    "order": 4,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 123,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 5 — BASIC SQL COMMANDS",
+    "description": "Mastering core SQL DML and DDL commands for data selection, modification, and schema alteration.",
+    "order": 5,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 124,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 6 — SQL PRACTICE",
+    "description": "Practical hands-on exercises combining all learned database and query concepts.",
+    "order": 6,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 125,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 7 — FILTERING AND CONDITIONS",
+    "description": "Precision data extraction using WHERE, AND, OR, CASE, BETWEEN, date ranges, EXISTS, NOT EXISTS, and HAVING vs WHERE comparisons.",
+    "order": 7,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 126,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 8 — SQL OPERATORS",
+    "description": "Set and membership operations: IN, NOT IN, comparison operators, LIKE pattern matching, wildcards, UNION, and UNION ALL.",
+    "order": 8,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 127,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 9 — SQL JOINS",
+    "description": "Deep dive into combining tables: INNER, LEFT, RIGHT, FULL OUTER, SELF, and CROSS JOINs with visual Venn diagrams and multi-table queries.",
+    "order": 9,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 128,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 10 — GROUP BY, ORDER BY AND AGGREGATES",
+    "description": "Aggregating data across groups: GROUP BY, ORDER BY, ASC/DESC, LIMIT/OFFSET pagination, SUM, AVG, MIN, MAX, COUNT, and combined logic.",
+    "order": 10,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 129,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 11 — STRING FUNCTIONS",
+    "description": "Manipulating textual data: CONCAT, SUBSTRING, REPLACE, TRIM, STRING_AGG / GROUP_CONCAT, and escaping special characters.",
+    "order": 11,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 130,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 12 — DATE AND TIME FUNCTIONS",
+    "description": "Working with temporal data: DATE/DATETIME types, formatting, CURRENT_DATE/NOW/GETDATE, DATEADD arithmetic, DATEDIFF, and EXTRACT.",
+    "order": 12,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 131,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 13 — NUMERIC AND NULL FUNCTIONS",
+    "description": "Mathematical operations: FLOOR, ROUND, CEILING, numeric expressions, handling NULLs, COALESCE, ISNULL, and NULL vs 0 vs empty string.",
+    "order": 13,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 132,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 14 — WINDOW FUNCTIONS AND CTEs",
+    "description": "Advanced analytic SQL: OVER clause, RANK, DENSE_RANK, ROW_NUMBER, PARTITION BY, running totals, top N per group, WITH clause CTEs.",
+    "order": 14,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 133,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 15 — STORED PROCEDURES AND TRIGGERS",
+    "description": "Database automation: Stored procedures, parameters, execution, BEFORE/AFTER triggers, and cross-database procedural syntax.",
+    "order": 15,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 134,
+  "fields": {
+    "course": 10,
+    "title": "MODULE 16 — TRANSACTIONS AND ADVANCED OPTIMIZATION",
+    "description": "ACID transactions, COMMIT, ROLLBACK, SAVEPOINT, database relationships, normalization (1NF-3NF), subqueries, EXISTS vs IN, query optimization.",
+    "order": 16,
+    "pdf_file": ""
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 135,
+  "fields": {
+    "course": 6,
+    "title": "Loops Over Strings Guess And Check Binary",
+    "description": "Comprehensive study module 4 covering Loops Over Strings Guess And Check Binary.",
+    "order": 4,
+    "pdf_file": "courses/python-full-stack/module-04-loops-over-strings-guess-and-check-binary.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 136,
+  "fields": {
+    "course": 6,
+    "title": "Floats And Approximation Methods",
+    "description": "Comprehensive study module 5 covering Floats And Approximation Methods.",
+    "order": 5,
+    "pdf_file": "courses/python-full-stack/module-05-floats-and-approximation-methods.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 137,
+  "fields": {
+    "course": 6,
+    "title": "Bisection Search",
+    "description": "Comprehensive study module 6 covering Bisection Search.",
+    "order": 6,
+    "pdf_file": "courses/python-full-stack/module-06-bisection-search.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 138,
+  "fields": {
+    "course": 6,
+    "title": "Decomposition Abstraction Functions",
+    "description": "Comprehensive study module 7 covering Decomposition Abstraction Functions.",
+    "order": 7,
+    "pdf_file": "courses/python-full-stack/module-07-decomposition-abstraction-functions.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 139,
+  "fields": {
+    "course": 6,
+    "title": "Functions As Objects",
+    "description": "Comprehensive study module 8 covering Functions As Objects.",
+    "order": 8,
+    "pdf_file": "courses/python-full-stack/module-08-functions-as-objects.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 140,
+  "fields": {
+    "course": 6,
+    "title": "Lambda Functions Tuples And Lists",
+    "description": "Comprehensive study module 9 covering Lambda Functions Tuples And Lists.",
+    "order": 9,
+    "pdf_file": "courses/python-full-stack/module-09-lambda-functions-tuples-and-lists.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 141,
+  "fields": {
+    "course": 6,
+    "title": "Lists And Mutability",
+    "description": "Comprehensive study module 10 covering Lists And Mutability.",
+    "order": 10,
+    "pdf_file": "courses/python-full-stack/module-10-lists-and-mutability.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 142,
+  "fields": {
+    "course": 6,
+    "title": "Aliasing And Cloning",
+    "description": "Comprehensive study module 11 covering Aliasing And Cloning.",
+    "order": 11,
+    "pdf_file": "courses/python-full-stack/module-11-aliasing-and-cloning.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 143,
+  "fields": {
+    "course": 6,
+    "title": "List Comprehension Testing And Debugging",
+    "description": "Comprehensive study module 12 covering List Comprehension Testing And Debugging.",
+    "order": 12,
+    "pdf_file": "courses/python-full-stack/module-12-list-comprehension-testing-and-debugging.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 144,
+  "fields": {
+    "course": 6,
+    "title": "Exceptions And Assertions",
+    "description": "Comprehensive study module 13 covering Exceptions And Assertions.",
+    "order": 13,
+    "pdf_file": "courses/python-full-stack/module-13-exceptions-and-assertions.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 145,
+  "fields": {
+    "course": 6,
+    "title": "Dictionaries",
+    "description": "Comprehensive study module 14 covering Dictionaries.",
+    "order": 14,
+    "pdf_file": "courses/python-full-stack/module-14-dictionaries.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 146,
+  "fields": {
+    "course": 6,
+    "title": "Recursion",
+    "description": "Comprehensive study module 15 covering Recursion.",
+    "order": 15,
+    "pdf_file": "courses/python-full-stack/module-15-recursion.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 147,
+  "fields": {
+    "course": 6,
+    "title": "Recursion On Non Numerics",
+    "description": "Comprehensive study module 16 covering Recursion On Non Numerics.",
+    "order": 16,
+    "pdf_file": "courses/python-full-stack/module-16-recursion-on-non-numerics.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 148,
+  "fields": {
+    "course": 6,
+    "title": "Python Classes",
+    "description": "Comprehensive study module 17 covering Python Classes.",
+    "order": 17,
+    "pdf_file": "courses/python-full-stack/module-17-python-classes.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 149,
+  "fields": {
+    "course": 6,
+    "title": "More Python Class Methods",
+    "description": "Comprehensive study module 18 covering More Python Class Methods.",
+    "order": 18,
+    "pdf_file": "courses/python-full-stack/module-18-more-python-class-methods.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 150,
+  "fields": {
+    "course": 6,
+    "title": "Inheritance",
+    "description": "Comprehensive study module 19 covering Inheritance.",
+    "order": 19,
+    "pdf_file": "courses/python-full-stack/module-19-inheritance.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 151,
+  "fields": {
+    "course": 6,
+    "title": "Fitness Tracker Oop Example",
+    "description": "Comprehensive study module 20 covering Fitness Tracker Oop Example.",
+    "order": 20,
+    "pdf_file": "courses/python-full-stack/module-20-fitness-tracker-oop-example.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 152,
+  "fields": {
+    "course": 6,
+    "title": "Timing Programs And Counting Operations",
+    "description": "Comprehensive study module 21 covering Timing Programs And Counting Operations.",
+    "order": 21,
+    "pdf_file": "courses/python-full-stack/module-21-timing-programs-and-counting-operations.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 153,
+  "fields": {
+    "course": 6,
+    "title": "Big O Notation And Theta",
+    "description": "Comprehensive study module 22 covering Big O Notation And Theta.",
+    "order": 22,
+    "pdf_file": "courses/python-full-stack/module-22-big-o-notation-and-theta.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 154,
+  "fields": {
+    "course": 6,
+    "title": "Complexity Classes And Examples",
+    "description": "Comprehensive study module 23 covering Complexity Classes And Examples.",
+    "order": 23,
+    "pdf_file": "courses/python-full-stack/module-23-complexity-classes-and-examples.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 155,
+  "fields": {
+    "course": 6,
+    "title": "Searching And Sorting Algorithms",
+    "description": "Comprehensive study module 24 covering Searching And Sorting Algorithms.",
+    "order": 24,
+    "pdf_file": "courses/python-full-stack/module-24-searching-and-sorting-algorithms.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 156,
+  "fields": {
+    "course": 6,
+    "title": "Data Visualization And Plotting",
+    "description": "Comprehensive study module 25 covering Data Visualization And Plotting.",
+    "order": 25,
+    "pdf_file": "courses/python-full-stack/module-25-data-visualization-and-plotting.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 157,
+  "fields": {
+    "course": 6,
+    "title": "List Access Hashing And Simulations",
+    "description": "Comprehensive study module 26 covering List Access Hashing And Simulations.",
+    "order": 26,
+    "pdf_file": "courses/python-full-stack/module-26-list-access-hashing-and-simulations.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 158,
+  "fields": {
+    "course": 7,
+    "title": "Html Tables And Lists",
+    "description": "Comprehensive study module 4 covering Html Tables And Lists.",
+    "order": 4,
+    "pdf_file": "courses/web-development/module-04-html-tables-and-lists.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 159,
+  "fields": {
+    "course": 7,
+    "title": "Html Forms Semantics And Seo",
+    "description": "Comprehensive study module 5 covering Html Forms Semantics And Seo.",
+    "order": 5,
+    "pdf_file": "courses/web-development/module-05-html-forms-semantics-and-seo.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 160,
+  "fields": {
+    "course": 7,
+    "title": "Css Fundamentals And Selectors",
+    "description": "Comprehensive study module 6 covering Css Fundamentals And Selectors.",
+    "order": 6,
+    "pdf_file": "courses/web-development/module-06-css-fundamentals-and-selectors.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 161,
+  "fields": {
+    "course": 7,
+    "title": "Css Colors Backgrounds And Borders",
+    "description": "Comprehensive study module 7 covering Css Colors Backgrounds And Borders.",
+    "order": 7,
+    "pdf_file": "courses/web-development/module-07-css-colors-backgrounds-and-borders.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 162,
+  "fields": {
+    "course": 7,
+    "title": "Css Box Model Margin And Padding",
+    "description": "Comprehensive study module 8 covering Css Box Model Margin And Padding.",
+    "order": 8,
+    "pdf_file": "courses/web-development/module-08-css-box-model-margin-and-padding.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 163,
+  "fields": {
+    "course": 7,
+    "title": "Css Typography And Units",
+    "description": "Comprehensive study module 9 covering Css Typography And Units.",
+    "order": 9,
+    "pdf_file": "courses/web-development/module-09-css-typography-and-units.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 164,
+  "fields": {
+    "course": 7,
+    "title": "Css Display And Positioning",
+    "description": "Comprehensive study module 10 covering Css Display And Positioning.",
+    "order": 10,
+    "pdf_file": "courses/web-development/module-10-css-display-and-positioning.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 165,
+  "fields": {
+    "course": 7,
+    "title": "Css Flexbox Grid And Responsive",
+    "description": "Comprehensive study module 11 covering Css Flexbox Grid And Responsive.",
+    "order": 11,
+    "pdf_file": "courses/web-development/module-11-css-flexbox-grid-and-responsive.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 166,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Syntax And Variables",
+    "description": "Comprehensive study module 12 covering Javascript Syntax And Variables.",
+    "order": 12,
+    "pdf_file": "courses/web-development/module-12-javascript-syntax-and-variables.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 167,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Operators And Control Flow",
+    "description": "Comprehensive study module 13 covering Javascript Operators And Control Flow.",
+    "order": 13,
+    "pdf_file": "courses/web-development/module-13-javascript-operators-and-control-flow.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 168,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Objects And Properties",
+    "description": "Comprehensive study module 14 covering Javascript Objects And Properties.",
+    "order": 14,
+    "pdf_file": "courses/web-development/module-14-javascript-objects-and-properties.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 169,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Loops And Iterations",
+    "description": "Comprehensive study module 15 covering Javascript Loops And Iterations.",
+    "order": 15,
+    "pdf_file": "courses/web-development/module-15-javascript-loops-and-iterations.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 170,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Functions And Scope",
+    "description": "Comprehensive study module 16 covering Javascript Functions And Scope.",
+    "order": 16,
+    "pdf_file": "courses/web-development/module-16-javascript-functions-and-scope.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 171,
+  "fields": {
+    "course": 7,
+    "title": "Javascript Arrays And Strings",
+    "description": "Comprehensive study module 17 covering Javascript Arrays And Strings.",
+    "order": 17,
+    "pdf_file": "courses/web-development/module-17-javascript-arrays-and-strings.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 172,
+  "fields": {
+    "course": 7,
+    "title": "Dom Architecture And Selectors",
+    "description": "Comprehensive study module 18 covering Dom Architecture And Selectors.",
+    "order": 18,
+    "pdf_file": "courses/web-development/module-18-dom-architecture-and-selectors.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 173,
+  "fields": {
+    "course": 7,
+    "title": "Dom Manipulation Styles And Events",
+    "description": "Comprehensive study module 19 covering Dom Manipulation Styles And Events.",
+    "order": 19,
+    "pdf_file": "courses/web-development/module-19-dom-manipulation-styles-and-events.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 174,
+  "fields": {
+    "course": 7,
+    "title": "Event Bubbling Storage And Errors",
+    "description": "Comprehensive study module 20 covering Event Bubbling Storage And Errors.",
+    "order": 20,
+    "pdf_file": "courses/web-development/module-20-event-bubbling-storage-and-errors.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 175,
+  "fields": {
+    "course": 7,
+    "title": "Nodejs Architecture And Modules",
+    "description": "Comprehensive study module 21 covering Nodejs Architecture And Modules.",
+    "order": 21,
+    "pdf_file": "courses/web-development/module-21-nodejs-architecture-and-modules.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 176,
+  "fields": {
+    "course": 7,
+    "title": "Async Javascript Promises And Express",
+    "description": "Comprehensive study module 22 covering Async Javascript Promises And Express.",
+    "order": 22,
+    "pdf_file": "courses/web-development/module-22-async-javascript-promises-and-express.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 177,
+  "fields": {
+    "course": 7,
+    "title": "Mongodb Database And Crud",
+    "description": "Comprehensive study module 23 covering Mongodb Database And Crud.",
+    "order": 23,
+    "pdf_file": "courses/web-development/module-23-mongodb-database-and-crud.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 178,
+  "fields": {
+    "course": 7,
+    "title": "React Fundamentals And Components",
+    "description": "Comprehensive study module 24 covering React Fundamentals And Components.",
+    "order": 24,
+    "pdf_file": "courses/web-development/module-24-react-fundamentals-and-components.pdf"
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 179,
+  "fields": {
+    "course": 7,
+    "title": "React State Hooks And Router",
+    "description": "Comprehensive study module 25 covering React State Hooks And Router.",
+    "order": 25,
+    "pdf_file": "courses/web-development/module-25-react-state-hooks-and-router.pdf"
+  }
+}
+]

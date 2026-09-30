@@ -1,0 +1,101 @@
+[
+{
+  "model": "learning.enrollment",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "course": 6,
+    "enrolled_at": "2026-09-30T11:22:52.459Z",
+    "progress_percent": "100.00",
+    "is_completed": true,
+    "completed_at": "2026-09-30T11:22:52.458Z",
+    "last_accessed_at": "2026-09-30T11:22:52.522Z"
+  }
+},
+{
+  "model": "learning.enrollment",
+  "pk": 5,
+  "fields": {
+    "user": 2,
+    "course": 10,
+    "enrolled_at": "2026-09-30T11:22:54.592Z",
+    "progress_percent": "0.00",
+    "is_completed": false,
+    "completed_at": null,
+    "last_accessed_at": "2026-09-30T11:22:54.592Z"
+  }
+},
+{
+  "model": "learning.enrollment",
+  "pk": 6,
+  "fields": {
+    "user": 3,
+    "course": 7,
+    "enrolled_at": "2026-09-30T11:57:02.688Z",
+    "progress_percent": "0.00",
+    "is_completed": false,
+    "completed_at": null,
+    "last_accessed_at": "2026-09-30T11:57:02.688Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 7,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 161,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.467Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 8,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 163,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.474Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 9,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 165,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.483Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 10,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 162,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.491Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 11,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 164,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.500Z"
+  }
+},
+{
+  "model": "learning.lessonprogress",
+  "pk": 12,
+  "fields": {
+    "enrollment": 4,
+    "lesson": 166,
+    "completed": true,
+    "completed_at": "2026-09-30T11:22:52.509Z"
+  }
+}
+]
