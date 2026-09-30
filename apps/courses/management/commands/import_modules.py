@@ -24,13 +24,14 @@ class Command(BaseCommand):
 
         # 2. Determine folder path under MEDIA_ROOT/courses/
         folder_candidates = [
-            "python-full-stack",
             course.slug,
             course.slug.replace('-development', ''),
+            course_query.lower().replace(' ', '-'),
+            "python-full-stack",
         ]
         
         target_dir = None
-        relative_folder = "courses/python-full-stack"
+        relative_folder = None
         for cand in folder_candidates:
             dir_path = Path(settings.MEDIA_ROOT) / 'courses' / cand
             if dir_path.exists() and dir_path.is_dir():

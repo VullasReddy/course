@@ -40,10 +40,12 @@ class CourseDetailView(generics.RetrieveAPIView):
 import os
 from django.http import FileResponse, Http404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.shortcuts import get_object_or_404
 from .models import Module
 
 @login_required
+@xframe_options_sameorigin
 def view_module_pdf(request, module_id):
     module = get_object_or_404(Module, id=module_id)
     if not module.pdf_file or not os.path.exists(module.pdf_file.path):
