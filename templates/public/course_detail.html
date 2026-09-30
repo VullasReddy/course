@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} | ARSHITH{% endblock %}
+
+{% block content %}
+<section class="hero-emerald-banner py-5">
+  <div class="container px-lg-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <span class="badge-green-accent mb-2">{{ course.category.name }}</span>
+        <h1 class="h2 font-weight-bold text-white mb-3">{{ course.title }}</h1>
+        <p class="lead text-white-50 mb-4">{{ course.short_description }}</p>
+
+        <div class="d-flex flex-wrap gap-4 text-white-50 small">
+          <div><i class="fa-solid fa-user-circle me-1" style="color: var(--sn-mint-bright);"></i> Instructor: <strong class="text-white">{{ course.instructor.name }}</strong></div>
+          <div><i class="fa-solid fa-star me-1 text-warning"></i> Rating: <strong class="text-white">{{ course.rating }} / 5.0</strong></div>
+          <div><i class="fa-solid fa-clock me-1" style="color: var(--sn-mint-bright);"></i> Duration: <strong class="text-white">{{ course.duration_hours }} Hours</strong></div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 text-lg-end">
+        <div class="p-4 bg-white text-dark rounded-3 shadow-lg border">
+          <span class="badge bg-success font-weight-bold p-2 mb-3 d-inline-block">Free Enterprise Access</span>
+          {% if is_enrolled %}
+            <a href="{% url 'player' course.id %}" class="btn btn-arshith-reg w-100 btn-lg mb-2 justify-content-center">
+              <i class="fa-solid fa-play me-2"></i> Continue Course Player
+            </a>
+          {% else %}
+            <button onclick="API.enrollInCourse({{ course.id }})" class="btn btn-arshith-reg w-100 btn-lg mb-2 justify-content-center">
+              <i class="fa-solid fa-user-plus me-2"></i> Enroll Now
+            </button>
+          {% endif %}
+          <div class="small text-muted text-center mt-2">Includes Cryptographic PDF Certificate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="container px-lg-4 py-5">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="p-4 bg-white rounded border mb-4">
+        <h4 class="font-weight-bold text-dark border-bottom pb-2 mb-3">Course Overview</h4>
+        <p class="text-muted leading-relaxed mb-0">{{ course.description }}</p>
+      </div>
+
+      <div class="p-4 bg-white rounded border mb-4">
+        <h4 class="font-weight-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-book-open text-success me-2"></i> Course Modules & Curriculum</h4>
+        <div class="accordion" id="curriculumAccordion">
+          {% for module in course.modules.all %}
+            <div class="accordion-item mb-3 border rounded overflow-hidden shadow-xs">
+              <h2 class="accordion-header" id="heading{{ module.id }}">
+                <button class="accordion-button font-weight-bold {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ module.id }}">
+                  <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                    <div>
+                      <span class="badge bg-emerald-light text-dark me-2">Module {{ module.order }}</span>
+                      <strong>{{ module.title }}</strong>
+                    </div>
+                    {% if module.pdf_file %}
+                      <span class="badge bg-success-subtle text-success small"><i class="fa-solid fa-file-pdf me-1"></i> PDF Available</span>
+                    {% endif %}
+                  </div>
+                </button>
+              </h2>
+              <div id="collapse{{ module.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#curriculumAccordion">
+                <div class="accordion-body bg-light-subtle p-3 border-top">
+                  {% if module.description %}
+                    <p class="small text-muted mb-3">{{ module.description }}</p>
+                  {% endif %}
+
+                  {% if module.pdf_file %}
+                    <div class="p-3 bg-white border rounded d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                      <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-file-pdf text-danger fa-2x"></i>
+                        <div>
+                          <strong class="small text-dark d-block">Module {{ module.order }} Course Material</strong>
+                          <span class="x-small text-muted">Official ARSHITH PDF Document</span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        {% if user.is_authenticated %}
+                          <a href="{% url 'view_module_pdf' module.id %}" target="_blank" class="btn btn-sm btn-outline-success">
+                            <i class="fa-solid fa-eye me-1"></i> View PDF
+                          </a>
+                          <a href="{% url 'download_module_pdf' module.id %}" class="btn btn-sm btn-arshith-reg">
+                            <i class="fa-solid fa-download me-1"></i> Download
+                          </a>
+                        {% else %}
+                          <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm btn-outline-secondary" title="Login to view PDF">
+                            <i class="fa-solid fa-lock me-1"></i> Log in to View PDF
+                          </a>
+                          <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm btn-secondary" title="Login to download PDF">
+                            <i class="fa-solid fa-lock me-1"></i> Log in to Download
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  {% if module.lessons.count > 0 %}
+                    <ul class="list-group list-group-flush rounded border overflow-hidden">
+                      {% for lesson in module.lessons.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3 bg-white">
+                          <div>
+                            <i class="fa-solid fa-play-circle text-success me-2"></i>
+                            <span class="small font-weight-bold text-dark">{{ lesson.title }}</span>
+                          </div>
+                          <span class="badge bg-light text-muted border">{{ lesson.duration_minutes }} min</span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="p-4 bg-white rounded border">
+        <h5 class="font-weight-bold text-dark border-bottom pb-2 mb-3">Instructor Profile</h5>
+        <h6 class="font-weight-bold text-dark mb-1">{{ course.instructor.name }}</h6>
+        <p class="small text-muted mb-2">{{ course.instructor.designation }}</p>
+        <p class="small text-muted mb-0">{{ course.instructor.bio }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

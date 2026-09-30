@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Springboard Log In | Arshith Springboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="p-4 p-md-5 bg-white rounded border shadow-lg">
+        <div class="text-center mb-4">
+          <div class="badge bg-primary p-2 h5 mb-2">ARSHITH</div>
+          <h2 class="h4 font-weight-bold text-dark mb-1">Learner Login</h2>
+          <p class="small text-muted">Access your enterprise learning dashboard & progress.</p>
+        </div>
+
+        <form id="login-form">
+          <div class="mb-3">
+            <label class="form-label small font-weight-bold text-muted">Work Email</label>
+            <input type="email" id="email" class="form-control" placeholder="name@company.com" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small font-weight-bold text-muted">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" id="submit-btn" class="btn btn-springboard-primary w-100 py-2">Log In</button>
+        </form>
+
+        <div class="mt-4 p-3 bg-light rounded border small text-muted">
+          <strong>Demo Accounts:</strong><br>
+          • Student: <code>student@arshithspringboard.com</code> / <code>StudentPass123!</code><br>
+          • Admin: <code>admin@arshithspringboard.com</code> / <code>AdminPass123!</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  try {
+    const data = await API.fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password })
+    });
+    API.showToast('Login successful', 'success');
+    setTimeout(() => window.location.href = data.user.role === 'admin' ? '/admin-portal/' : '/dashboard/', 600);
+  } catch (err) {
+    API.showToast(err.message, 'error');
+  }
+});
+</script>
+{% endblock %}

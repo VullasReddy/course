@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}My Enrolled Courses | Arshith Springboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="font-weight-bold text-dark mb-4">My Enrolled Courses</h2>
+  <div id="my-courses-grid" class="row g-4"></div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const grid = document.getElementById('my-courses-grid');
+  try {
+    const data = await API.fetch('/api/my-courses');
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<div class="col-12 text-muted">No enrolled courses.</div>';
+      return;
+    }
+    grid.innerHTML = data.map(item => `
+      <div class="col-md-6 col-lg-4">
+        <div class="p-4 bg-white rounded border shadow-sm">
+          <span class="badge bg-primary mb-1">${item.course.category_name}</span>
+          <h5 class="font-weight-bold text-dark h6 mb-2">${item.course.title}</h5>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small text-muted font-weight-bold mb-1">
+              <span>Progress</span>
+              <span>${item.progress_percent}%</span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div class="progress-bar bg-success" style="width: ${item.progress_percent}%"></div>
+            </div>
+          </div>
+          <a href="/player/${item.course.id}/" class="btn btn-springboard-primary btn-sm w-100">Continue Player</a>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    grid.innerHTML = `<div class="col-12 text-danger">Failed to load courses.</div>`;
+  }
+});
+</script>

@@ -1,0 +1,890 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} | ARSHITH BOOTCAMP{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/alasql@4"></script>
+<style>
+  .sql-tab-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .sql-tab-btn:hover {
+    color: #0f172a;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  .sql-tab-btn.active {
+    color: #059669;
+    border-bottom-color: #059669;
+    background-color: #ffffff;
+  }
+  .module-header {
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #334155;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lesson-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .lesson-item:hover {
+    background-color: #f1f5f9;
+  }
+  .lesson-item.active {
+    background-color: #ecfdf5 !important;
+    border-left: 4px solid #059669;
+    font-weight: 600;
+    color: #065f46;
+  }
+  .exam-item-sidebar {
+    padding: 10px 14px;
+    background-color: #f0fdf4;
+    border-bottom: 1px solid #dcfce7;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .exam-item-locked {
+    padding: 10px 14px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+  .code-block {
+    background: #0f172a !important;
+    border-radius: 8px;
+    color: #38bdf8 !important;
+  }
+  .table-result-container {
+    max-height: 380px;
+    overflow-y: auto;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column" style="min-height: calc(100vh - 60px);">
+  <!-- Top Navigation Header -->
+  <div class="bg-dark text-white px-4 py-2 d-flex align-items-center justify-content-between shadow-sm" style="background-color: #0f172a !important;">
+    <div class="d-flex align-items-center gap-3">
+      <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
+      <span class="badge bg-success me-2">{{ course.course_code }}</span>
+      <strong class="text-white h6 mb-0">{{ course.title }}</strong>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span class="small text-white-50">Course Progress: <strong id="player-progress" class="text-success h6 mb-0">0%</strong></span>
+      <span id="cert-link-holder"></span>
+    </div>
+  </div>
+
+  <div class="d-flex flex-grow-1" style="height: calc(100vh - 110px);">
+    <!-- Left Sidebar Curriculum Tree -->
+    <div class="bg-white border-end d-flex flex-column" style="width: 340px; min-width: 340px; overflow-y: auto;">
+      <div class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+        <div>
+          <strong class="text-dark small d-block"><i class="fa-solid fa-layer-group me-1 text-success"></i> Course Curriculum</strong>
+          <span class="x-small text-muted" id="lesson-count-badge">Loading curriculum...</span>
+        </div>
+        <span class="badge bg-emerald-light text-dark x-small" id="completed-counter">0/0</span>
+      </div>
+
+      <div id="curriculum-tree" class="flex-grow-1 overflow-y-auto"></div>
+    </div>
+
+    <!-- Main Workspace Content Pane -->
+    <div class="flex-grow-1 d-flex flex-column bg-light overflow-y-auto">
+      <!-- Navigation Tabs -->
+      <div class="bg-white border-bottom px-3 d-flex gap-2 align-items-center shadow-xs">
+        <button class="sql-tab-btn active" id="tab-btn-lesson" onclick="switchTab('lesson')">
+          <i class="fa-solid fa-book-open me-1"></i> Lesson & Video
+        </button>
+        <button class="sql-tab-btn" id="tab-btn-exam" onclick="switchTab('exam')">
+          <i class="fa-solid fa-clipboard-question me-1 text-success"></i> Module Exam
+        </button>
+        <button class="sql-tab-btn" id="tab-btn-labs" onclick="switchTab('labs')">
+          <i class="fa-solid fa-flask me-1"></i> Practical Labs (7)
+        </button>
+        <button class="sql-tab-btn" id="tab-btn-interview" onclick="switchTab('interview')">
+          <i class="fa-solid fa-user-tie me-1"></i> SQL Interview Guide
+        </button>
+        <button class="sql-tab-btn" id="tab-btn-playground" onclick="switchTab('playground')">
+          <i class="fa-solid fa-terminal me-1 text-success"></i> SQL Playground
+        </button>
+      </div>
+
+      <!-- TAB 1: Lesson Content -->
+      <div id="pane-lesson" class="p-4 flex-grow-1 overflow-y-auto">
+        <div class="ratio ratio-16x9 bg-black rounded shadow mb-4 d-none" id="video-container">
+          <video id="player-video" controls class="w-100 h-100 rounded">
+            <source id="video-source" src="" type="video/mp4">
+          </video>
+        </div>
+
+        <div class="p-4 bg-white rounded border shadow-sm">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+            <div>
+              <span class="badge bg-success-subtle text-success mb-1" id="current-module-title">Module 1</span>
+              <h3 class="h4 font-weight-bold text-dark mb-0" id="lesson-title">Select a lesson</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-outline-secondary btn-sm" onclick="navigateLesson(-1)"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <button id="btn-complete" class="btn btn-arshith-reg btn-sm" onclick="toggleCompleteCurrentLesson()">
+                <i class="fa-solid fa-circle-check me-1"></i> Mark as Complete
+              </button>
+              <button class="btn btn-outline-secondary btn-sm" onclick="navigateLesson(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+          <div id="lesson-content" class="text-dark">Select a lesson from the left sidebar checklist.</div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Module Exam Workspace -->
+      <div id="pane-exam" class="p-4 flex-grow-1 overflow-y-auto d-none">
+        <div id="exam-container"></div>
+      </div>
+
+      <!-- TAB 3: Practical SQL Labs -->
+      <div id="pane-labs" class="p-4 flex-grow-1 overflow-y-auto d-none">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h4 class="h5 font-weight-bold text-dark mb-1"><i class="fa-solid fa-flask text-success me-2"></i> Practical SQL Labs</h4>
+            <p class="small text-muted mb-0">Hands-on guided lab projects covering database creation, enterprise queries, duplicate cleanup, window functions, and ACID transactions.</p>
+          </div>
+        </div>
+        <div class="row g-4" id="labs-list-container"></div>
+      </div>
+
+      <!-- TAB 4: SQL Interview Guide -->
+      <div id="pane-interview" class="p-4 flex-grow-1 overflow-y-auto d-none">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="h5 font-weight-bold text-dark mb-1"><i class="fa-solid fa-user-tie text-success me-2"></i> SQL Technical Interview Guide</h4>
+              <p class="small text-muted mb-0">Frequently asked interview questions categorized by Beginner, Intermediate, and Advanced difficulty with model answers and tips.</p>
+            </div>
+            <input type="text" id="interview-search-input" class="form-control form-control-sm w-25" placeholder="Search questions..." onkeyup="filterInterviewQuestions()">
+          </div>
+        </div>
+        <div id="interview-questions-container" class="row g-3"></div>
+      </div>
+
+      <!-- TAB 5: SQL Interactive Playground -->
+      <div id="pane-playground" class="p-4 flex-grow-1 overflow-y-auto d-none">
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <span class="badge bg-success"><i class="fa-solid fa-database me-1"></i> Live SQL Engine</span>
+              <strong class="small text-dark">Active Dataset:</strong>
+              <select id="playground-dataset-select" class="form-select form-select-sm" style="width: 200px;" onchange="loadPlaygroundDataset()">
+                <option value="students">🎓 Students Database</option>
+                <option value="employees">💼 Employees Database</option>
+                <option value="ecommerce">🛒 E-Commerce Database</option>
+                <option value="banking">🏦 Banking Database</option>
+              </select>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-secondary" onclick="resetPlaygroundDb()"><i class="fa-solid fa-rotate-left me-1"></i> Reset DB</button>
+              <button class="btn btn-sm btn-success px-3" onclick="executePlaygroundQuery()"><i class="fa-solid fa-play me-1"></i> Run Query</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="card border shadow-sm h-100">
+              <div class="card-header bg-light font-weight-bold small text-dark"><i class="fa-solid fa-table-list me-1 text-success"></i> Schema Explorer</div>
+              <div class="card-body p-2 small overflow-y-auto" id="playground-schema-browser" style="max-height: 420px;"></div>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="card border shadow-sm mb-3">
+              <div class="card-header bg-dark text-white p-2 d-flex justify-content-between align-items-center">
+                <span class="x-small text-muted font-monospace"><i class="fa-solid fa-code me-1 text-info"></i> SQL Query Editor</span>
+                <span class="x-small text-success">SQL Standard Compliant</span>
+              </div>
+              <div class="card-body p-0">
+                <textarea id="playground-editor" class="form-control border-0 p-3 font-monospace bg-dark text-white" rows="6" style="resize: vertical; font-size: 0.9rem;" placeholder="-- Type your SQL query here...&#10;SELECT * FROM students WHERE gpa >= 3.8 ORDER BY gpa DESC;"></textarea>
+              </div>
+            </div>
+
+            <div class="card border shadow-sm">
+              <div class="card-header bg-light p-2 d-flex justify-content-between align-items-center small">
+                <span id="query-status-text" class="text-muted"><i class="fa-solid fa-info-circle me-1"></i> Ready to execute.</span>
+                <span id="query-execution-time" class="x-small text-muted"></span>
+              </div>
+              <div class="card-body p-0 table-result-container" id="query-results-wrapper">
+                <div class="p-4 text-center text-muted small">Write a query above and click "Run Query" to see output results.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const courseId = {{ course.id }};
+let playerData = null;
+let allLessons = [];
+let currentIndex = 0;
+let activeExamModuleId = null;
+let examData = null;
+let examTimerInterval = null;
+let examAnswers = {};
+
+// --- INITIALIZATION ---
+async function loadPlayerData() {
+  try {
+    playerData = await API.fetch(`/api/player/${courseId}`);
+    document.getElementById('player-progress').innerText = `${playerData.progress_percent}%`;
+    buildTree();
+    if (allLessons.length > 0) selectLesson(0);
+    renderLabs();
+    renderInterviewQuestions();
+    initPlayground();
+  } catch (err) {
+    API.showToast(err.message, 'error');
+  }
+}
+
+// --- CURRICULUM TREE WITH EXAM UNLOCK & TICK MARKS ---
+function buildTree() {
+  const tree = document.getElementById('curriculum-tree');
+  tree.innerHTML = '';
+  allLessons = [];
+  let counter = 0;
+  let completedCount = 0;
+
+  const modulesMeta = playerData.modules_metadata || [];
+
+  (playerData.course.modules || []).forEach((mod, mIdx) => {
+    const meta = modulesMeta.find(m => m.module_id === mod.id) || {};
+    const modLessons = mod.lessons || [];
+
+    let completedModLessons = 0;
+    modLessons.forEach(les => {
+      if (playerData.completed_lesson_ids.includes(les.id)) {
+        completedModLessons++;
+        completedCount++;
+      }
+    });
+
+    const isAllLessonsDone = modLessons.length > 0 && completedModLessons === modLessons.length;
+    const isExamPassed = meta.exam_passed || false;
+
+    // Module Header Element
+    const modHeader = document.createElement('div');
+    modHeader.className = 'module-header';
+    modHeader.innerHTML = `
+      <span>${isExamPassed ? '<i class="fa-solid fa-circle-check text-success me-1"></i>' : ''} ${mod.title}</span>
+      <span class="badge ${isExamPassed ? 'bg-success' : isAllLessonsDone ? 'bg-info' : 'bg-secondary'} x-small">
+        ${completedModLessons}/${modLessons.length}
+      </span>
+    `;
+    tree.appendChild(modHeader);
+
+    // Lessons List
+    modLessons.forEach(les => {
+      const idx = counter++;
+      les.globalIdx = idx;
+      les.moduleTitle = mod.title;
+      les.moduleId = mod.id;
+      allLessons.push(les);
+      const done = playerData.completed_lesson_ids.includes(les.id);
+      
+      const el = document.createElement('div');
+      el.className = 'lesson-item';
+      el.id = `les-item-${idx}`;
+      el.onclick = () => {
+        switchTab('lesson');
+        selectLesson(idx);
+      };
+      el.innerHTML = `
+        <span class="text-truncate" style="max-width: 230px;">
+          ${done ? '<i class="fa-solid fa-check text-success me-2"></i>' : '<i class="fa-regular fa-circle text-muted me-2"></i>'}
+          ${les.title}
+        </span>
+        <span class="x-small text-muted">${les.duration_minutes}m</span>
+      `;
+      tree.appendChild(el);
+    });
+
+    // Module Assessment Sidebar Link
+    const examItem = document.createElement('div');
+    if (isExamPassed) {
+      examItem.className = 'exam-item-sidebar text-success';
+      examItem.onclick = () => loadModuleExam(mod.id);
+      examItem.innerHTML = `<i class="fa-solid fa-award me-2"></i> ${mod.title} Exam Passed ✓ (${meta.best_score || 100}%)`;
+    } else if (isAllLessonsDone) {
+      examItem.className = 'exam-item-sidebar text-primary animate__animated animate__pulse animate__infinite';
+      examItem.onclick = () => loadModuleExam(mod.id);
+      examItem.innerHTML = `<i class="fa-solid fa-unlock text-primary me-2"></i> Take ${mod.title} Assessment`;
+    } else {
+      examItem.className = 'exam-item-locked';
+      examItem.innerHTML = `<i class="fa-solid fa-lock text-muted me-2"></i> ${mod.title} Exam Locked`;
+    }
+    tree.appendChild(examItem);
+  });
+
+  document.getElementById('lesson-count-badge').innerText = `${allLessons.length} Comprehensive Lessons`;
+  document.getElementById('completed-counter').innerText = `${completedCount}/${allLessons.length} Done`;
+
+  if (completedCount === allLessons.length && allLessons.length > 0) {
+    document.getElementById('cert-link-holder').innerHTML = `
+      <a href="/certificates/" class="btn btn-sm btn-success animate__animated animate__bounce"><i class="fa-solid fa-certificate me-1"></i> View Certificate</a>
+    `;
+  }
+}
+
+// --- LESSON SELECTION ---
+function selectLesson(idx) {
+  if (idx < 0 || idx >= allLessons.length) return;
+  currentIndex = idx;
+  const les = allLessons[idx];
+
+  document.querySelectorAll('.lesson-item').forEach(e => e.classList.remove('active'));
+  const active = document.getElementById(`les-item-${idx}`);
+  if (active) {
+    active.classList.add('active');
+    active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  document.getElementById('current-module-title').innerText = les.moduleTitle || 'Module';
+  document.getElementById('lesson-title').innerText = les.title;
+  document.getElementById('lesson-content').innerHTML = les.content_html || les.description || 'Lesson content loading...';
+
+  const videoContainer = document.getElementById('video-container');
+  if (les.video_url) {
+    videoContainer.classList.remove('d-none');
+    document.getElementById('video-source').src = les.video_url;
+    document.getElementById('player-video').load();
+  } else {
+    videoContainer.classList.add('d-none');
+  }
+
+  const done = playerData.completed_lesson_ids.includes(les.id);
+  const btn = document.getElementById('btn-complete');
+  btn.className = done ? 'btn btn-success btn-sm' : 'btn btn-arshith-reg btn-sm';
+  btn.innerHTML = done ? '<i class="fa-solid fa-check-circle me-1"></i> Completed ✓' : '<i class="fa-solid fa-circle-check me-1"></i> Mark as Complete';
+}
+
+function navigateLesson(direction) {
+  selectLesson(currentIndex + direction);
+}
+
+async function toggleCompleteCurrentLesson() {
+  const les = allLessons[currentIndex];
+  const done = playerData.completed_lesson_ids.includes(les.id);
+  try {
+    const res = await API.fetch(`/api/lessons/${les.id}/complete`, {
+      method: 'POST',
+      body: JSON.stringify({ completed: !done })
+    });
+    playerData.progress_percent = res.progress_percent;
+    if (!done) playerData.completed_lesson_ids.push(les.id);
+    else playerData.completed_lesson_ids = playerData.completed_lesson_ids.filter(i => i !== les.id);
+    
+    document.getElementById('player-progress').innerText = `${res.progress_percent}%`;
+    buildTree();
+    selectLesson(currentIndex);
+    API.showToast('Lesson completion saved to database!', 'success');
+  } catch (err) {
+    API.showToast(err.message, 'error');
+  }
+}
+
+// --- MODULE EXAM SYSTEM ---
+async function loadModuleExam(moduleId) {
+  activeExamModuleId = moduleId;
+  switchTab('exam');
+  const container = document.getElementById('exam-container');
+  container.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-success"></div><p class="mt-2 text-muted small">Loading module exam questions...</p></div>`;
+
+  try {
+    examData = await API.fetch(`/api/modules/${moduleId}/exam`);
+    renderExamStartScreen();
+  } catch (err) {
+    container.innerHTML = `
+      <div class="alert alert-warning border-start border-4 border-warning p-4 shadow-sm">
+        <h5 class="h6 font-weight-bold text-dark mb-2"><i class="fa-solid fa-lock me-2"></i> Assessment Locked</h5>
+        <p class="small text-muted mb-0">${err.message || 'Complete all lessons in this module to unlock the assessment.'}</p>
+      </div>
+    `;
+  }
+}
+
+function renderExamStartScreen() {
+  const container = document.getElementById('exam-container');
+  container.innerHTML = `
+    <div class="card border-0 shadow-sm max-width-700 mx-auto">
+      <div class="card-header bg-dark text-white p-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+        <span class="badge bg-success font-monospace mb-2">OFFICIAL MODULE ASSESSMENT</span>
+        <h3 class="h4 font-weight-bold text-white mb-1">${examData.module_title} Assessment</h3>
+        <p class="small text-white-50 mb-0">Test your mastery of the concepts covered in this module.</p>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3 mb-4 text-center">
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="d-block h5 text-primary mb-0">${examData.total_questions}</strong>
+              <span class="x-small text-muted">Questions</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="d-block h5 text-warning mb-0">${examData.time_limit_minutes} Mins</strong>
+              <span class="x-small text-muted">Time Limit</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="d-block h5 text-success mb-0">${examData.passing_percentage}%</strong>
+              <span class="x-small text-muted">Passing Score</span>
+            </div>
+          </div>
+        </div>
+
+        ${examData.is_passed ? `
+          <div class="alert alert-success d-flex align-items-center gap-3 mb-4">
+            <i class="fa-solid fa-award fa-2x"></i>
+            <div>
+              <strong class="d-block">Module Completed & Passed!</strong>
+              <span class="small">Your highest score on this assessment is <strong>${examData.best_score}%</strong>.</span>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-success btn-lg font-weight-bold" onclick="startExamSession()">
+            <i class="fa-solid fa-play me-2"></i> ${examData.previous_attempts_count > 0 ? 'Retry Assessment' : 'Start Module Assessment'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function startExamSession() {
+  examAnswers = {};
+  let currentQuestionIdx = 0;
+  let remainingSeconds = examData.time_limit_minutes * 60;
+
+  if (examTimerInterval) clearInterval(examTimerInterval);
+  examTimerInterval = setInterval(() => {
+    remainingSeconds--;
+    const mins = Math.floor(remainingSeconds / 60);
+    const secs = remainingSeconds % 60;
+    const timerEl = document.getElementById('exam-timer-display');
+    if (timerEl) timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    if (remainingSeconds <= 0) {
+      clearInterval(examTimerInterval);
+      submitExamSession();
+    }
+  }, 1000);
+
+  const container = document.getElementById('exam-container');
+
+  function renderQuestion(qIdx) {
+    currentQuestionIdx = qIdx;
+    const q = examData.questions[qIdx];
+    const selected = examAnswers[q.id] || '';
+
+    container.innerHTML = `
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+          <div>
+            <span class="badge bg-success me-2">Question ${qIdx + 1} of ${examData.total_questions}</span>
+            <span class="small text-white-50">${examData.module_title} Assessment</span>
+          </div>
+          <div class="badge bg-warning text-dark font-monospace" style="font-size: 0.9rem;">
+            <i class="fa-regular fa-clock me-1"></i> <span id="exam-timer-display">15:00</span>
+          </div>
+        </div>
+
+        <div class="card-body p-4">
+          <div class="progress mb-4" style="height: 6px;">
+            <div class="progress-bar bg-success" style="width: ${((qIdx + 1) / examData.total_questions) * 100}%;"></div>
+          </div>
+
+          <h5 class="h6 font-weight-bold text-dark mb-4">${q.question_text}</h5>
+
+          <div class="d-flex flex-column gap-3 mb-4">
+            ${['A', 'B', 'C', 'D'].map(opt => `
+              <label class="p-3 rounded border cursor-pointer d-flex align-items-center gap-3 ${selected === opt ? 'border-success bg-emerald-light font-weight-bold' : 'bg-white'}" for="opt_${q.id}_${opt}">
+                <input type="radio" name="exam_q_${q.id}" id="opt_${q.id}_${opt}" value="${opt}" ${selected === opt ? 'checked' : ''} onchange="selectExamOption(${q.id}, '${opt}')">
+                <span><strong>${opt}.</strong> ${q[`option_${opt.toLowerCase()}`]}</span>
+              </label>
+            `).join('')}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center border-top pt-3">
+            <button class="btn btn-outline-secondary btn-sm" onclick="renderQuestion(${qIdx - 1})" ${qIdx === 0 ? 'disabled' : ''}>
+              <i class="fa-solid fa-chevron-left me-1"></i> Previous
+            </button>
+            <span class="small text-muted">${Object.keys(examAnswers).length} of ${examData.total_questions} Answered</span>
+            ${qIdx === examData.total_questions - 1 ? `
+              <button class="btn btn-success btn-sm px-4" onclick="confirmSubmitExam()"><i class="fa-solid fa-check-double me-1"></i> Submit Assessment</button>
+            ` : `
+              <button class="btn btn-primary btn-sm px-4" onclick="renderQuestion(${qIdx + 1})">Next <i class="fa-solid fa-chevron-right ms-1"></i></button>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.selectExamOption = function(qId, val) {
+    examAnswers[qId] = val;
+  };
+
+  window.renderQuestion = renderQuestion;
+  renderQuestion(0);
+}
+
+function confirmSubmitExam() {
+  const answeredCount = Object.keys(examAnswers).length;
+  if (confirm(`You have answered ${answeredCount} of ${examData.total_questions} questions.\n\nAre you sure you want to submit your assessment?`)) {
+    submitExamSession();
+  }
+}
+
+async function submitExamSession() {
+  if (examTimerInterval) clearInterval(examTimerInterval);
+  const container = document.getElementById('exam-container');
+  container.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-success"></div><p class="mt-2 text-muted small">Evaluating assessment on secure backend...</p></div>`;
+
+  try {
+    const res = await API.fetch(`/api/modules/${activeExamModuleId}/exam/submit`, {
+      method: 'POST',
+      body: JSON.stringify({ answers: examAnswers })
+    });
+
+    // Refresh player data to update unlocked modules
+    playerData = await API.fetch(`/api/player/${courseId}`);
+    document.getElementById('player-progress').innerText = `${playerData.progress_percent}%`;
+    buildTree();
+
+    renderExamResultScreen(res);
+  } catch (err) {
+    API.showToast(err.message, 'error');
+  }
+}
+
+function renderExamResultScreen(res) {
+  const container = document.getElementById('exam-container');
+  container.innerHTML = `
+    <div class="card border-0 shadow-sm max-width-700 mx-auto">
+      <div class="card-header ${res.passed ? 'bg-success' : 'bg-danger'} text-white p-4 text-center">
+        <i class="fa-solid ${res.passed ? 'fa-circle-check fa-3x' : 'fa-circle-xmark fa-3x'} mb-2"></i>
+        <h3 class="h4 font-weight-bold mb-1">${res.passed ? '🎉 MODULE COMPLETED!' : 'ASSESSMENT NOT PASSED'}</h3>
+        <span class="badge bg-white text-dark">${res.passed ? 'Module Passed' : 'Minimum 70% Required'}</span>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3 text-center mb-4">
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="h4 d-block mb-0 text-dark">${res.correct_answers}/${res.total_questions}</strong>
+              <span class="x-small text-muted">Correct Answers</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="h4 d-block mb-0 ${res.passed ? 'text-success' : 'text-danger'}">${res.percentage}%</strong>
+              <span class="x-small text-muted">Score Percentage</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-light rounded border">
+              <strong class="h4 d-block mb-0 text-primary">${res.best_score}%</strong>
+              <span class="x-small text-muted">Best Attempt Score</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert ${res.passed ? 'alert-emerald' : 'alert-warning'} mb-4">
+          ${res.passed ? `
+            <strong>Module 1 completed successfully!</strong> Module 2 is now unlocked on your course dashboard.
+          ` : `
+            You scored <strong>${res.percentage}%</strong>. A minimum score of <strong>70%</strong> is required to pass this assessment and unlock the next module.
+          `}
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary flex-grow-1" onclick="loadPlayerData(); switchTab('lesson');">
+            <i class="fa-solid fa-book-open me-1"></i> Review Lessons
+          </button>
+          <button class="btn btn-success flex-grow-1" onclick="startExamSession()">
+            <i class="fa-solid fa-rotate-right me-1"></i> Retry Assessment
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// --- TAB SWITCHING ---
+function switchTab(tabName) {
+  currentTab = tabName;
+  ['lesson', 'exam', 'labs', 'interview', 'playground'].forEach(t => {
+    document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabName);
+    document.getElementById(`pane-${t}`).classList.toggle('d-none', t !== tabName);
+  });
+  if (tabName === 'exam' && !activeExamModuleId && allLessons.length > 0) {
+    loadModuleExam(allLessons[currentIndex].moduleId);
+  }
+}
+
+// --- PRACTICAL SQL LABS ---
+const labsData = [
+  { id: 1, title: 'Lab 1: Student Management Database', desc: 'Create tables for students, courses, and enrollments with primary & foreign keys.', query: 'CREATE TABLE students (id INT PRIMARY KEY, name VARCHAR(50), gpa DECIMAL(3,2));' },
+  { id: 2, title: 'Lab 2: Employee Management System', desc: 'Query employee salaries, calculate department averages, and rank top earners using DENSE_RANK().', query: 'SELECT emp_name, salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rank FROM employees;' },
+  { id: 3, title: 'Lab 3: E-Commerce Multi-Table Analysis', desc: 'Join customers, orders, order_items, and payments to compute total monthly revenue.', query: 'SELECT c.name, SUM(o.total_amount) FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.name;' },
+  { id: 4, title: 'Lab 4: Duplicate Data Cleanup Project', desc: 'Identify duplicated customer emails and safely delete duplicate records while preserving the oldest entry.', query: 'SELECT email, COUNT(*) FROM customers GROUP BY email HAVING COUNT(*) > 1;' },
+  { id: 5, title: 'Lab 5: Advanced Window Functions Leaderboard', desc: 'Partition employee records by department and extract top 3 earners using ROW_NUMBER().', query: 'SELECT * FROM (SELECT emp_name, dept_name, salary, ROW_NUMBER() OVER (PARTITION BY dept_name ORDER BY salary DESC) as rn FROM employees) WHERE rn <= 3;' },
+  { id: 6, title: 'Lab 6: CTE Business Analytics Project', desc: 'Break down complex revenue reporting into multiple readable Common Table Expressions (WITH clause).', query: 'WITH MonthlySales AS (SELECT order_date, SUM(amount) as total FROM orders GROUP BY order_date) SELECT * FROM MonthlySales WHERE total > 1000;' },
+  { id: 7, title: 'Lab 7: Banking ACID Transaction Simulation', desc: 'Execute multi-step funds transfer between accounts using BEGIN, COMMIT, ROLLBACK, and SAVEPOINT.', query: 'UPDATE accounts SET balance = balance - 500 WHERE account_id = 101; UPDATE accounts SET balance = balance + 500 WHERE account_id = 102;' }
+];
+
+function renderLabs() {
+  const container = document.getElementById('labs-list-container');
+  container.innerHTML = labsData.map(lab => `
+    <div class="col-md-6">
+      <div class="card border shadow-sm h-100">
+        <div class="card-body">
+          <span class="badge bg-success mb-2">Lab ${lab.id}</span>
+          <h5 class="h6 font-weight-bold text-dark mb-2">${lab.title}</h5>
+          <p class="small text-muted mb-3">${lab.desc}</p>
+          <div class="bg-dark p-2 rounded mb-3">
+            <code class="x-small text-info font-monospace">${lab.query}</code>
+          </div>
+          <button class="btn btn-sm btn-outline-success w-100" onclick="openLabInPlayground('${lab.query.replace(/'/g, "\\'")}')">
+            <i class="fa-solid fa-play me-1"></i> Open & Test in SQL Playground
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openLabInPlayground(query) {
+  switchTab('playground');
+  document.getElementById('playground-editor').value = query;
+  executePlaygroundQuery();
+}
+
+// --- INTERVIEW QUESTIONS ---
+const interviewData = [
+  { level: 'Beginner', q: 'What is the difference between DELETE, TRUNCATE, and DROP?', a: 'DELETE removes rows matching a condition and can be rolled back. TRUNCATE wipes all rows quickly without logging individual row deletes. DROP removes the table definition entirely from the database schema.' },
+  { level: 'Beginner', q: 'What is a Primary Key vs Foreign Key?', a: 'A Primary Key uniquely identifies each record in a table and cannot contain NULLs. A Foreign Key is a field in one table that references the Primary Key of another table, enforcing referential integrity.' },
+  { level: 'Intermediate', q: 'Explain INNER JOIN vs LEFT JOIN with an example.', a: 'INNER JOIN returns only matching rows present in both tables. LEFT JOIN returns all rows from the left table plus matching rows from the right table (filling NULL for missing right matches).' },
+  { level: 'Intermediate', q: 'What is the difference between UNION and UNION ALL?', a: 'UNION combines query result sets and removes duplicate rows. UNION ALL combines results without deduplication, making UNION ALL significantly faster.' },
+  { level: 'Advanced', q: 'What are Window Functions and how do ROW_NUMBER, RANK, DENSE_RANK differ?', a: 'Window functions compute analytics over a set of table rows related to the current row. ROW_NUMBER assigns sequential integers (1,2,3). RANK skips rank numbers after ties (1,1,3). DENSE_RANK ranks ties without gaps (1,1,2).' },
+  { level: 'Advanced', q: 'Explain CTEs (Common Table Expressions) and when to use them over subqueries.', a: 'CTEs defined via WITH clause create temporary named result sets that enhance query readability, can be referenced multiple times, and support recursive tree traversal.' }
+];
+
+function renderInterviewQuestions() {
+  const container = document.getElementById('interview-questions-container');
+  container.innerHTML = interviewData.map((item, idx) => `
+    <div class="col-md-6 interview-card-item">
+      <div class="card border shadow-sm h-100">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <span class="badge ${item.level === 'Beginner' ? 'bg-info' : item.level === 'Intermediate' ? 'bg-primary' : 'bg-danger'}">${item.level}</span>
+          <span class="x-small text-muted">Interview Q${idx + 1}</span>
+        </div>
+        <div class="card-body">
+          <h6 class="font-weight-bold text-dark mb-2">${item.q}</h6>
+          <details class="small text-muted">
+            <summary class="text-success cursor-pointer font-weight-bold mb-2">View Model Answer</summary>
+            <p class="p-2 bg-light rounded text-dark mb-0">${item.a}</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterInterviewQuestions() {
+  const query = document.getElementById('interview-search-input').value.toLowerCase();
+  document.querySelectorAll('.interview-card-item').forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.classList.toggle('d-none', !text.includes(query));
+  });
+}
+
+// --- INTERACTIVE SQL PLAYGROUND WITH ALASQL ---
+const datasets = {
+  students: {
+    tables: ['students', 'courses'],
+    seedSql: `
+      CREATE TABLE IF NOT EXISTS students (student_id INT, full_name VARCHAR(50), course VARCHAR(50), gpa DOUBLE, city VARCHAR(30));
+      DELETE FROM students;
+      INSERT INTO students VALUES (101, 'Arshith Group', 'Python Full Stack', 3.95, 'Hyderabad');
+      INSERT INTO students VALUES (102, 'Alex Mercer', 'Web Development', 3.80, 'Bangalore');
+      INSERT INTO students VALUES (103, 'Sarah Connor', 'SQL Mastery', 4.00, 'Mumbai');
+      INSERT INTO students VALUES (104, 'David Miller', 'AI & Data Science', 3.65, 'Delhi');
+
+      CREATE TABLE IF NOT EXISTS courses (course_id INT, title VARCHAR(50), fee INT);
+      DELETE FROM courses;
+      INSERT INTO courses VALUES (1, 'Python Full Stack', 25000);
+      INSERT INTO courses VALUES (2, 'SQL Mastery', 18000);
+      INSERT INTO courses VALUES (3, 'Web Development', 20000);
+    `
+  },
+  employees: {
+    tables: ['employees', 'departments'],
+    seedSql: `
+      CREATE TABLE IF NOT EXISTS employees (emp_id INT, emp_name VARCHAR(50), dept_id INT, salary INT);
+      DELETE FROM employees;
+      INSERT INTO employees VALUES (1, 'Rajesh Kumar', 10, 95000);
+      INSERT INTO employees VALUES (2, 'Priya Sharma', 10, 95000);
+      INSERT INTO employees VALUES (3, 'Amit Patel', 20, 82000);
+      INSERT INTO employees VALUES (4, 'Neha Gupta', 20, 78000);
+
+      CREATE TABLE IF NOT EXISTS departments (dept_id INT, dept_name VARCHAR(50));
+      DELETE FROM departments;
+      INSERT INTO departments VALUES (10, 'Engineering');
+      INSERT INTO departments VALUES (20, 'Marketing');
+    `
+  },
+  ecommerce: {
+    tables: ['customers', 'orders'],
+    seedSql: `
+      CREATE TABLE IF NOT EXISTS customers (customer_id INT, name VARCHAR(50), city VARCHAR(30));
+      DELETE FROM customers;
+      INSERT INTO customers VALUES (1, 'Rahul Verma', 'Delhi');
+      INSERT INTO customers VALUES (2, 'Ananya Sen', 'Kolkata');
+
+      CREATE TABLE IF NOT EXISTS orders (order_id INT, customer_id INT, amount DOUBLE);
+      DELETE FROM orders;
+      INSERT INTO orders VALUES (501, 1, 450.00);
+      INSERT INTO orders VALUES (502, 1, 120.50);
+      INSERT INTO orders VALUES (503, 2, 890.00);
+    `
+  },
+  banking: {
+    tables: ['accounts'],
+    seedSql: `
+      CREATE TABLE IF NOT EXISTS accounts (acc_num INT, holder VARCHAR(50), balance DOUBLE);
+      DELETE FROM accounts;
+      INSERT INTO accounts VALUES (1001, 'Arshith Enterprise', 150000.00);
+      INSERT INTO accounts VALUES (1002, 'John Doe', 4200.50);
+    `
+  }
+};
+
+function initPlayground() {
+  loadPlaygroundDataset();
+}
+
+function loadPlaygroundDataset() {
+  const selected = document.getElementById('playground-dataset-select').value;
+  const ds = datasets[selected];
+  if (!ds) return;
+
+  try {
+    alasql(ds.seedSql);
+    renderSchemaBrowser(ds.tables);
+    document.getElementById('playground-editor').value = `SELECT * FROM ${ds.tables[0]};`;
+    executePlaygroundQuery();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderSchemaBrowser(tables) {
+  const browser = document.getElementById('playground-schema-browser');
+  browser.innerHTML = tables.map(t => {
+    let rows = [];
+    try { rows = alasql(`SELECT * FROM ${t}`); } catch(e){}
+    const cols = rows.length > 0 ? Object.keys(rows[0]) : [];
+    return `
+      <div class="mb-3">
+        <strong class="text-success d-block mb-1"><i class="fa-solid fa-table me-1"></i> ${t}</strong>
+        <div class="ps-2">
+          ${cols.map(c => `<div class="x-small text-muted">• <code>${c}</code></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetPlaygroundDb() {
+  loadPlaygroundDataset();
+  API.showToast('Database reset to initial state.', 'info');
+}
+
+function executePlaygroundQuery() {
+  const query = document.getElementById('playground-editor').value.trim();
+  const statusEl = document.getElementById('query-status-text');
+  const wrapper = document.getElementById('query-results-wrapper');
+
+  if (!query) {
+    statusEl.innerHTML = '<span class="text-warning"><i class="fa-solid fa-warning me-1"></i> Query editor is empty.</span>';
+    return;
+  }
+
+  const startTime = performance.now();
+  try {
+    const res = alasql(query);
+    const execTime = (performance.now() - startTime).toFixed(2);
+    document.getElementById('query-execution-time').innerText = `Executed in ${execTime} ms`;
+
+    if (Array.isArray(res) && res.length > 0) {
+      const columns = Object.keys(res[0]);
+      statusEl.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Query executed successfully. (${res.length} rows)</span>`;
+      
+      wrapper.innerHTML = `
+        <table class="table table-sm table-striped table-bordered align-middle mb-0 small bg-white">
+          <thead class="table-dark">
+            <tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr>
+          </thead>
+          <tbody>
+            ${res.map(row => `
+              <tr>${columns.map(c => `<td>${row[c] !== undefined ? row[c] : 'NULL'}</td>`).join('')}</tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    } else if (Array.isArray(res) && res.length === 0) {
+      statusEl.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Query executed successfully. (0 rows returned)</span>';
+      wrapper.innerHTML = '<div class="p-3 text-center text-muted small">Query executed successfully, but returned no matching rows.</div>';
+    } else {
+      statusEl.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Statement executed successfully.</span>';
+      wrapper.innerHTML = `<div class="p-3 text-center text-success small">Result: ${JSON.stringify(res)}</div>`;
+    }
+  } catch (err) {
+    statusEl.innerHTML = `<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i> SQL Error: ${err.message}</span>`;
+    wrapper.innerHTML = `<div class="p-3 bg-danger bg-opacity-10 text-danger small font-monospace"><i class="fa-solid fa-bug me-1"></i> ${err.message}</div>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadPlayerData);
+</script>
+{% endblock %}

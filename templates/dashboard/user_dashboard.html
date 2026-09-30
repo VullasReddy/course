@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Learner Dashboard | Arshith Springboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="p-4 bg-dark text-white rounded-3 mb-4 shadow" style="background: linear-gradient(135deg, #0A192F 0%, #0050B3 100%);">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <span class="badge bg-success mb-2">Springboard Learner Portal</span>
+        <h2 class="h3 font-weight-bold text-white mb-1">Welcome back, {{ user.full_name|default:user.email }}!</h2>
+        <p class="text-white-50 mb-0">Continue your engineering track. Track progress and earn verified certificates.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'courses' %}" class="btn btn-springboard-accent">Browse Catalog</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="p-4 bg-white rounded border shadow-sm text-center">
+        <h3 class="font-weight-bold text-primary mb-1">{{ total_enrolled }}</h3>
+        <span class="small text-muted font-weight-bold">Enrolled Courses</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="p-4 bg-white rounded border shadow-sm text-center">
+        <h3 class="font-weight-bold text-success mb-1">{{ completed_count }}</h3>
+        <span class="small text-muted font-weight-bold">Completed Courses</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="p-4 bg-white rounded border shadow-sm text-center">
+        <h3 class="font-weight-bold text-warning mb-1">{{ certificates_count }}</h3>
+        <span class="small text-muted font-weight-bold">Certificates Earned</span>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="font-weight-bold text-dark mb-3"><i class="fa-solid fa-play-circle text-primary me-2"></i>Continue Learning</h4>
+  <div class="row g-4 mb-4">
+    {% for enrollment in enrollments %}
+      <div class="col-md-6">
+        <div class="p-4 bg-white rounded border shadow-sm">
+          <span class="badge bg-primary mb-1">{{ enrollment.course.category.name }}</span>
+          <h5 class="font-weight-bold text-dark mb-2">{{ enrollment.course.title }}</h5>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small text-muted font-weight-bold mb-1">
+              <span>Progress</span>
+              <span>{{ enrollment.progress_percent }}%</span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div class="progress-bar bg-success" style="width: {{ enrollment.progress_percent }}%"></div>
+            </div>
+          </div>
+          <a href="{% url 'player' enrollment.course.id %}" class="btn btn-sm btn-springboard-primary">Continue Course Player</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-muted">You haven't enrolled in any courses yet. <a href="{% url 'courses' %}">Browse Catalog</a></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

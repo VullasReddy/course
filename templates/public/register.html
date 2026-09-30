@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Springboard Registration | Arshith Springboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="p-4 p-md-5 bg-white rounded border shadow-lg">
+        <div class="text-center mb-4">
+          <h2 class="h4 font-weight-bold text-dark mb-1">Create Free Account</h2>
+          <p class="small text-muted">Join Arshith Springboard to start learning.</p>
+        </div>
+
+        <form id="register-form">
+          <div class="mb-3">
+            <label class="form-label small font-weight-bold text-muted">Full Name</label>
+            <input type="text" id="full_name" class="form-control" placeholder="Alex Mercer" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small font-weight-bold text-muted">Email Address</label>
+            <input type="email" id="email" class="form-control" placeholder="name@company.com" required>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label small font-weight-bold text-muted">Password</label>
+              <input type="password" id="password" class="form-control" required minlength="6">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small font-weight-bold text-muted">Confirm Password</label>
+              <input type="password" id="confirm_password" class="form-control" required minlength="6">
+            </div>
+          </div>
+          <button type="submit" id="submit-btn" class="btn btn-springboard-primary w-100 py-2">Register Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const full_name = document.getElementById('full_name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirm_password = document.getElementById('confirm_password').value;
+
+  if (password !== confirm_password) {
+    API.showToast('Passwords do not match', 'error');
+    return;
+  }
+  try {
+    await API.fetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ full_name, email, password, confirm_password })
+    });
+    API.showToast('Account created successfully!', 'success');
+    setTimeout(() => window.location.href = '/dashboard/', 600);
+  } catch (err) {
+    API.showToast(err.message, 'error');
+  }
+});
+</script>
+{% endblock %}

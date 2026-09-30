@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}ServiceNow Admin Portal | Arshith Springboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="font-weight-bold text-dark mb-0">ServiceNow Enterprise Admin Portal</h2>
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">Public View</a>
+  </div>
+  <div class="p-5 bg-white rounded border shadow-sm">
+    <h5 class="font-weight-bold text-dark mb-3">System Metrics Overview</h5>
+    <div class="row g-4" id="admin-metrics">
+      <div class="col-md-3">
+        <div class="p-3 bg-light rounded border text-center">
+          <span class="small text-muted font-weight-bold">Total Users</span>
+          <h4 class="font-weight-bold text-primary mb-0 mt-1" id="m-users">-</h4>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-3 bg-light rounded border text-center">
+          <span class="small text-muted font-weight-bold">Total Courses</span>
+          <h4 class="font-weight-bold text-success mb-0 mt-1" id="m-courses">-</h4>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-3 bg-light rounded border text-center">
+          <span class="small text-muted font-weight-bold">Total Enrollments</span>
+          <h4 class="font-weight-bold text-info mb-0 mt-1" id="m-enrollments">-</h4>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-3 bg-light rounded border text-center">
+          <span class="small text-muted font-weight-bold">Certificates Issued</span>
+          <h4 class="font-weight-bold text-warning mb-0 mt-1" id="m-certs">-</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const data = await API.fetch('/api/admin/stats');
+    document.getElementById('m-users').innerText = data.metrics.total_users;
+    document.getElementById('m-courses').innerText = data.metrics.total_courses;
+    document.getElementById('m-enrollments').innerText = data.metrics.total_enrollments;
+    document.getElementById('m-certs').innerText = data.metrics.certificates_issued;
+  } catch (err) {}
+});
+</script>
+{% endblock %}

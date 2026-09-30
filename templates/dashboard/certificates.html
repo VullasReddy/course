@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}My Certificates | Arshith Springboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="font-weight-bold text-dark mb-4">My Completion Certificates</h2>
+  <div class="row g-4">
+    {% for cert in certificates %}
+      <div class="col-md-6">
+        <div class="p-4 bg-white rounded border shadow-sm">
+          <span class="badge bg-success mb-2">Verified Official Certificate</span>
+          <h5 class="font-weight-bold text-dark mb-1">{{ cert.course.title }}</h5>
+          <p class="small text-muted mb-3">Certificate ID: <code>{{ cert.certificate_id }}</code></p>
+          <div class="d-flex gap-2">
+            <a href="{% url 'api-download-cert' cert.certificate_id %}" class="btn btn-sm btn-springboard-primary">Download PDF</a>
+            <a href="{% url 'verify-certificate' cert.certificate_id %}" target="_blank" class="btn btn-sm btn-outline-secondary">Public Verify</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-muted">No certificates earned yet. Complete 100% of any course to earn your certificate.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

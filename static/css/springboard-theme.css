@@ -1,0 +1,177 @@
+/* ==========================================================================
+   INFOSYS SPRINGBOARD INSPIRED DESIGN SYSTEM - ARSHITH SPRINGBOARD
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --spring-dark-blue: #0A192F;
+  --spring-navy: #0B192C;
+  --spring-primary-blue: #0050B3;
+  --spring-accent-cyan: #00C49F;
+  --spring-emerald: #00EB87;
+  --spring-bg-slate: #F8FAFC;
+  --spring-card-bg: #FFFFFF;
+  --spring-border: #E2E8F0;
+  --spring-text-dark: #0F172A;
+  --spring-text-muted: #64748B;
+  --spring-shadow: 0 4px 14px rgba(10, 25, 47, 0.08);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--spring-bg-slate);
+  color: var(--spring-text-dark);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* Header Navbar - Infosys Springboard Style */
+.springboard-header {
+  background-color: #FFFFFF;
+  border-bottom: 2px solid #0050B3;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.springboard-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none !important;
+}
+
+.springboard-logo-badge {
+  background: #0050B3;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  letter-spacing: -0.3px;
+}
+
+.springboard-logo-text {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #0A192F;
+  letter-spacing: -0.3px;
+}
+
+.springboard-logo-sub {
+  font-size: 0.7rem;
+  color: #00C49F;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* Global Search Bar */
+.springboard-search-group {
+  max-width: 520px;
+  width: 100%;
+}
+
+.springboard-search-input {
+  border-radius: 50px 0 0 50px !important;
+  border: 1px solid var(--spring-border);
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.springboard-search-btn {
+  border-radius: 0 50px 50px 0 !important;
+  background-color: #0050B3;
+  color: #FFFFFF;
+  border: none;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Nav Links */
+.springboard-nav-link {
+  color: #334155 !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.5rem 0.85rem !important;
+  transition: color 0.2s ease;
+}
+
+.springboard-nav-link:hover, .springboard-nav-link.active {
+  color: #0050B3 !important;
+}
+
+/* Buttons */
+.btn-springboard-primary {
+  background-color: #0050B3;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 0.55rem 1.35rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-springboard-primary:hover {
+  background-color: #003A8C;
+  transform: translateY(-1px);
+}
+
+.btn-springboard-accent {
+  background-color: #00C49F;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 0.55rem 1.35rem;
+  border: none;
+}
+
+/* Springboard Hero Banner */
+.springboard-hero {
+  background: linear-gradient(135deg, #0A192F 0%, #003A8C 100%);
+  color: #FFFFFF;
+  padding: 4.5rem 0;
+  border-bottom: 4px solid #00C49F;
+}
+
+.springboard-hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* Springboard Cards */
+.springboard-card {
+  background: #FFFFFF;
+  border: 1px solid var(--spring-border);
+  border-radius: 10px;
+  box-shadow: var(--spring-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.springboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(10, 25, 47, 0.12);
+  border-color: #CBD5E1;
+}
+
+.springboard-card-img {
+  height: 170px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.springboard-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore Enterprise Courses | ARSHITH{% endblock %}
+
+{% block content %}
+<!-- Professional Green Banner Header -->
+<section class="hero-emerald-banner py-4">
+  <div class="container px-lg-5 text-center">
+    <h1 class="h2 font-weight-bold text-white mb-2">Explore Technical Courses</h1>
+    <p class="text-white-50 mb-0 mx-auto" style="max-width: 680px;">
+      Master industry-relevant skills with structured enterprise courses in Python Full Stack, Web Development, DBMS with SQL, and AI with Data Science.
+    </p>
+  </div>
+</section>
+
+
+<div class="container px-lg-5 py-5">
+  <div class="row g-4">
+    <!-- Filter Sidebar -->
+    <div class="col-lg-3">
+      <div class="p-4 bg-white rounded-3 border shadow-sm">
+        <h6 class="font-weight-bold text-dark border-bottom pb-2 mb-3">
+          <i class="fa-solid fa-filter me-2 text-success"></i> Filter Courses
+        </h6>
+        <form action="{% url 'courses' %}" method="GET">
+          <div class="mb-3">
+            <label class="form-label small font-weight-bold text-muted">Category Domain</label>
+            <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="">All Categories</option>
+              {% for cat in categories %}
+                <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <a href="{% url 'courses' %}" class="btn btn-sm btn-arshith-log w-100 justify-content-center">
+            <i class="fa-solid fa-arrows-rotate me-1"></i> Reset Filters
+          </a>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Course Grid -->
+    <div class="col-lg-9">
+      <div id="courses-grid" class="row g-4">
+        <!-- JS populates cards -->
+      </div>
+      <div id="courses-loader" class="text-center py-5">
+        <div class="spinner-border text-success" role="status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('courses-grid');
+  const loader = document.getElementById('courses-loader');
+  const params = new URLSearchParams(window.location.search);
+
+  try {
+    const data = await API.fetch(`/api/courses?${params.toString()}`);
+    loader.style.display = 'none';
+    const courses = data.results || data;
+
+    if (!courses || courses.length === 0) {
+      container.innerHTML = '<div class="col-12 text-center text-muted py-5">No courses found matching criteria.</div>';
+      return;
+    }
+
+    container.innerHTML = courses.map(c => `
+      <div class="col-md-6">
+        <div class="enterprise-card">
+          <div class="position-relative">
+            <img src="${c.thumbnail_url || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=60'}" class="enterprise-card-img" alt="${c.title}">
+            <div class="position-absolute top-0 start-0 m-2">
+              <span class="badge-green-accent">${c.category_name}</span>
+            </div>
+          </div>
+          <div class="card-body p-4 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
+              <span><i class="fa-solid fa-signal me-1"></i> ${c.difficulty}</span>
+              <span><i class="fa-solid fa-clock me-1"></i> ${c.duration_hours}h</span>
+            </div>
+            
+            <h5 class="card-title font-weight-bold text-dark mb-2 h6">
+              <a href="/courses/${c.slug}/" class="text-dark text-decoration-none">${c.title}</a>
+            </h5>
+            <p class="card-text text-muted small mb-3 flex-grow-1">${c.short_description ? c.short_description.substring(0, 90) + '...' : ''}</p>
+            <div class="border-top pt-3 d-flex justify-content-between align-items-center mt-auto small">
+              <span class="text-muted"><i class="fa-solid fa-user me-1"></i> ${c.instructor_name}</span>
+              <span class="text-warning font-weight-bold"><i class="fa-solid fa-star me-1"></i> ${c.rating}</span>
+            </div>
+          </div>
+          <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
+            <a href="/courses/${c.slug}/" class="btn btn-arshith-reg w-100 btn-sm justify-content-center">
+              View Course & Enroll
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    loader.style.display = 'none';
+    container.innerHTML = `<div class="col-12 text-danger text-center py-4">Failed to load course catalog.</div>`;
+  }
+});
+</script>
+{% endblock %}
+

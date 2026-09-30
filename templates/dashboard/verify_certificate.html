@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Certificate Verification | Arshith Springboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="p-5 bg-white rounded border shadow-lg text-center">
+        {% if certificate %}
+          <div class="badge bg-success p-2 mb-3">VERIFIED OFFICIAL CREDENTIAL</div>
+          <h2 class="h3 font-weight-bold text-dark mb-1">Certificate of Completion</h2>
+          <p class="text-muted small mb-4">ID: <code>{{ certificate.certificate_id }}</code></p>
+          <div class="p-3 bg-light rounded text-start mb-3">
+            <span class="small text-muted d-block font-weight-bold">Student Name</span>
+            <strong class="h5 text-dark mb-0">{{ certificate.user.full_name }}</strong>
+          </div>
+          <div class="p-3 bg-light rounded text-start mb-4">
+            <span class="small text-muted d-block font-weight-bold">Course Title</span>
+            <strong class="h5 text-primary mb-0">{{ certificate.course.title }}</strong>
+          </div>
+          <div class="small text-muted">Issued on {{ certificate.issue_date|date:"F d, Y" }} by Arshith Springboard Enterprise Academic Board.</div>
+        {% else %}
+          <div class="text-danger py-4">
+            <h4 class="font-weight-bold mb-2">Invalid Certificate ID</h4>
+            <p class="small text-muted">No certificate found for ID <code>{{ certificate_id }}</code>.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
