@@ -31,28 +31,22 @@ class CoursePlayerAPIView(APIView):
         enrollment = get_object_or_404(Enrollment, user=request.user, course_id=course_id)
         data = CoursePlayerSerializer(enrollment).data
 
-        # Add per-module completion and exam metadata
-        completed_lesson_ids = set(data.get('completed_lesson_ids', []))
+        # Add per-module completion, PDF URL, and exam metadata
         modules_metadata = []
 
         for mod in enrollment.course.modules.all():
-            mod_lessons = mod.lessons.filter(is_published=True)
-            total_mod_lessons = mod_lessons.count()
-            completed_mod_lessons = sum(1 for les in mod_lessons if les.id in completed_lesson_ids)
-            
-            is_all_lessons_done = (total_mod_lessons > 0 and completed_mod_lessons == total_mod_lessons)
-            
             mod_prog = ModuleProgress.objects.filter(enrollment=enrollment, module=mod).first()
             is_passed = mod_prog.completed if mod_prog else False
             best_score = float(mod_prog.best_score) if mod_prog else 0.0
+            pdf_url = f"/modules/{mod.id}/pdf/" if mod.pdf_file else None
 
             modules_metadata.append({
                 'module_id': mod.id,
                 'title': mod.title,
                 'order': mod.order,
-                'total_lessons': total_mod_lessons,
-                'completed_lessons': completed_mod_lessons,
-                'exam_unlocked': is_all_lessons_done,
+                'has_pdf': bool(mod.pdf_file),
+                'pdf_url': pdf_url,
+                'exam_unlocked': True,
                 'exam_passed': is_passed,
                 'best_score': best_score
             })
@@ -145,15 +139,6 @@ class ModuleExamAPIView(APIView):
     def get(self, request, module_id):
         module = get_object_or_404(Module, id=module_id)
         enrollment = get_object_or_404(Enrollment, user=request.user, course=module.course)
-
-        # Check if all lessons in module are completed
-        mod_lessons = module.lessons.filter(is_published=True)
-        for les in mod_lessons:
-            if not LessonProgress.objects.filter(enrollment=enrollment, lesson=les, completed=True).exists():
-                return Response({
-                    'error': f'Complete all {mod_lessons.count()} lessons in {module.title} to unlock the Module Assessment.',
-                    'unlocked': False
-                }, status=status.HTTP_403_FORBIDDEN)
 
         questions = list(ExamQuestion.objects.filter(module=module))
         import random

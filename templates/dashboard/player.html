@@ -117,8 +117,8 @@
     <div class="flex-grow-1 d-flex flex-column bg-light overflow-y-auto">
       <!-- Navigation Tabs -->
       <div class="bg-white border-bottom px-3 d-flex gap-2 align-items-center shadow-xs">
-        <button class="sql-tab-btn active" id="tab-btn-lesson" onclick="switchTab('lesson')">
-          <i class="fa-solid fa-book-open me-1"></i> Lesson & Video
+        <button class="sql-tab-btn active" id="tab-btn-pdf" onclick="switchTab('pdf')">
+          <i class="fa-solid fa-file-pdf text-danger me-1"></i> Module PDF Material
         </button>
         <button class="sql-tab-btn" id="tab-btn-exam" onclick="switchTab('exam')">
           <i class="fa-solid fa-clipboard-question me-1 text-success"></i> Module Exam
@@ -134,29 +134,29 @@
         </button>
       </div>
 
-      <!-- TAB 1: Lesson Content -->
-      <div id="pane-lesson" class="p-4 flex-grow-1 overflow-y-auto">
-        <div class="ratio ratio-16x9 bg-black rounded shadow mb-4 d-none" id="video-container">
-          <video id="player-video" controls class="w-100 h-100 rounded">
-            <source id="video-source" src="" type="video/mp4">
-          </video>
-        </div>
-
-        <div class="p-4 bg-white rounded border shadow-sm">
-          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+      <!-- TAB 1: Module PDF Workspace -->
+      <div id="pane-pdf" class="p-3 flex-grow-1 overflow-y-auto">
+        <div class="p-3 bg-white rounded border shadow-sm mb-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
-              <span class="badge bg-success-subtle text-success mb-1" id="current-module-title">Module 1</span>
-              <h3 class="h4 font-weight-bold text-dark mb-0" id="lesson-title">Select a lesson</h3>
+              <span class="badge bg-emerald-light text-dark mb-1" id="current-module-badge">Module 1</span>
+              <h3 class="h5 font-weight-bold text-dark mb-0" id="module-title">Select a Module</h3>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <button class="btn btn-outline-secondary btn-sm" onclick="navigateLesson(-1)"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-              <button id="btn-complete" class="btn btn-arshith-reg btn-sm" onclick="toggleCompleteCurrentLesson()">
-                <i class="fa-solid fa-circle-check me-1"></i> Mark as Complete
-              </button>
-              <button class="btn btn-outline-secondary btn-sm" onclick="navigateLesson(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
+              <button class="btn btn-outline-secondary btn-sm" onclick="navigateModule(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Prev</button>
+              <a id="btn-pdf-view" href="#" target="_blank" class="btn btn-outline-success btn-sm">
+                <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open in New Tab
+              </a>
+              <a id="btn-pdf-download" href="#" class="btn btn-arshith-reg btn-sm">
+                <i class="fa-solid fa-download me-1"></i> Download PDF
+              </a>
+              <button class="btn btn-outline-secondary btn-sm" onclick="navigateModule(1)">Next <i class="fa-solid fa-chevron-right ms-1"></i></button>
             </div>
           </div>
-          <div id="lesson-content" class="text-dark">Select a lesson from the left sidebar checklist.</div>
+        </div>
+
+        <div class="bg-white rounded border shadow-sm p-1" style="height: calc(100vh - 230px); min-height: 650px;">
+          <iframe id="player-pdf-frame" src="" style="width: 100%; height: 100%; border: none; border-radius: 6px;" title="Module PDF Viewer"></iframe>
         </div>
       </div>
 
@@ -251,7 +251,7 @@
 <script>
 const courseId = {{ course.id }};
 let playerData = null;
-let allLessons = [];
+let allModules = [];
 let currentIndex = 0;
 let activeExamModuleId = null;
 let examData = null;
@@ -264,7 +264,7 @@ async function loadPlayerData() {
     playerData = await API.fetch(`/api/player/${courseId}`);
     document.getElementById('player-progress').innerText = `${playerData.progress_percent}%`;
     buildTree();
-    if (allLessons.length > 0) selectLesson(0);
+    if (allModules.length > 0) selectModule(0);
     renderLabs();
     renderInterviewQuestions();
     initPlayground();
@@ -277,125 +277,89 @@ async function loadPlayerData() {
 function buildTree() {
   const tree = document.getElementById('curriculum-tree');
   tree.innerHTML = '';
-  allLessons = [];
-  let counter = 0;
+  allModules = playerData.modules_metadata || [];
   let completedCount = 0;
 
-  const modulesMeta = playerData.modules_metadata || [];
-
-  (playerData.course.modules || []).forEach((mod, mIdx) => {
-    const meta = modulesMeta.find(m => m.module_id === mod.id) || {};
-    const modLessons = mod.lessons || [];
-
-    let completedModLessons = 0;
-    modLessons.forEach(les => {
-      if (playerData.completed_lesson_ids.includes(les.id)) {
-        completedModLessons++;
-        completedCount++;
-      }
-    });
-
-    const isAllLessonsDone = modLessons.length > 0 && completedModLessons === modLessons.length;
-    const isExamPassed = meta.exam_passed || false;
+  allModules.forEach((mod, mIdx) => {
+    const isExamPassed = mod.exam_passed || false;
+    if (isExamPassed) completedCount++;
 
     // Module Header Element
     const modHeader = document.createElement('div');
     modHeader.className = 'module-header';
     modHeader.innerHTML = `
-      <span>${isExamPassed ? '<i class="fa-solid fa-circle-check text-success me-1"></i>' : ''} ${mod.title}</span>
-      <span class="badge ${isExamPassed ? 'bg-success' : isAllLessonsDone ? 'bg-info' : 'bg-secondary'} x-small">
-        ${completedModLessons}/${modLessons.length}
+      <span>${isExamPassed ? '<i class="fa-solid fa-circle-check text-success me-1"></i>' : ''} Module ${mod.order}</span>
+      <span class="badge ${isExamPassed ? 'bg-success' : 'bg-secondary'} x-small">
+        ${isExamPassed ? 'Passed ✓' : 'In Progress'}
       </span>
     `;
     tree.appendChild(modHeader);
 
-    // Lessons List
-    modLessons.forEach(les => {
-      const idx = counter++;
-      les.globalIdx = idx;
-      les.moduleTitle = mod.title;
-      les.moduleId = mod.id;
-      allLessons.push(les);
-      const done = playerData.completed_lesson_ids.includes(les.id);
-      
-      const el = document.createElement('div');
-      el.className = 'lesson-item';
-      el.id = `les-item-${idx}`;
-      el.onclick = () => {
-        switchTab('lesson');
-        selectLesson(idx);
-      };
-      el.innerHTML = `
-        <span class="text-truncate" style="max-width: 230px;">
-          ${done ? '<i class="fa-solid fa-check text-success me-2"></i>' : '<i class="fa-regular fa-circle text-muted me-2"></i>'}
-          ${les.title}
-        </span>
-        <span class="x-small text-muted">${les.duration_minutes}m</span>
-      `;
-      tree.appendChild(el);
-    });
+    // Module PDF Item
+    const el = document.createElement('div');
+    el.className = 'lesson-item';
+    el.id = `mod-item-${mIdx}`;
+    el.onclick = () => {
+      switchTab('pdf');
+      selectModule(mIdx);
+    };
+    el.innerHTML = `
+      <span class="text-truncate" style="max-width: 230px;">
+        <i class="fa-solid fa-file-pdf text-danger me-2"></i>
+        ${mod.title}
+      </span>
+      <span class="x-small text-muted">PDF</span>
+    `;
+    tree.appendChild(el);
 
     // Module Assessment Sidebar Link
     const examItem = document.createElement('div');
     if (isExamPassed) {
       examItem.className = 'exam-item-sidebar text-success';
-      examItem.onclick = () => loadModuleExam(mod.id);
-      examItem.innerHTML = `<i class="fa-solid fa-award me-2"></i> ${mod.title} Exam Passed ✓ (${meta.best_score || 100}%)`;
-    } else if (isAllLessonsDone) {
-      examItem.className = 'exam-item-sidebar text-primary animate__animated animate__pulse animate__infinite';
-      examItem.onclick = () => loadModuleExam(mod.id);
-      examItem.innerHTML = `<i class="fa-solid fa-unlock text-primary me-2"></i> Take ${mod.title} Assessment`;
+      examItem.onclick = () => loadModuleExam(mod.module_id);
+      examItem.innerHTML = `<i class="fa-solid fa-award me-2"></i> ${mod.title} Exam Passed ✓ (${mod.best_score || 100}%)`;
     } else {
-      examItem.className = 'exam-item-locked';
-      examItem.innerHTML = `<i class="fa-solid fa-lock text-muted me-2"></i> ${mod.title} Exam Locked`;
+      examItem.className = 'exam-item-sidebar text-primary cursor-pointer';
+      examItem.onclick = () => loadModuleExam(mod.module_id);
+      examItem.innerHTML = `<i class="fa-solid fa-pen-to-square text-success me-2"></i> Take Module ${mod.order} Assessment`;
     }
     tree.appendChild(examItem);
   });
 
-  document.getElementById('lesson-count-badge').innerText = `${allLessons.length} Comprehensive Lessons`;
-  document.getElementById('completed-counter').innerText = `${completedCount}/${allLessons.length} Done`;
+  document.getElementById('lesson-count-badge').innerText = `${allModules.length} Comprehensive Modules`;
+  document.getElementById('completed-counter').innerText = `${completedCount}/${allModules.length} Passed`;
 
-  if (completedCount === allLessons.length && allLessons.length > 0) {
+  if (completedCount === allModules.length && allModules.length > 0) {
     document.getElementById('cert-link-holder').innerHTML = `
       <a href="/certificates/" class="btn btn-sm btn-success animate__animated animate__bounce"><i class="fa-solid fa-certificate me-1"></i> View Certificate</a>
     `;
   }
 }
 
-// --- LESSON SELECTION ---
-function selectLesson(idx) {
-  if (idx < 0 || idx >= allLessons.length) return;
+// --- MODULE PDF SELECTION ---
+function selectModule(idx) {
+  if (idx < 0 || idx >= allModules.length) return;
   currentIndex = idx;
-  const les = allLessons[idx];
+  const mod = allModules[idx];
 
   document.querySelectorAll('.lesson-item').forEach(e => e.classList.remove('active'));
-  const active = document.getElementById(`les-item-${idx}`);
+  const active = document.getElementById(`mod-item-${idx}`);
   if (active) {
     active.classList.add('active');
     active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
-  document.getElementById('current-module-title').innerText = les.moduleTitle || 'Module';
-  document.getElementById('lesson-title').innerText = les.title;
-  document.getElementById('lesson-content').innerHTML = les.content_html || les.description || 'Lesson content loading...';
+  document.getElementById('current-module-badge').innerText = `Module ${mod.order}`;
+  document.getElementById('module-title').innerText = mod.title;
 
-  const videoContainer = document.getElementById('video-container');
-  if (les.video_url) {
-    videoContainer.classList.remove('d-none');
-    document.getElementById('video-source').src = les.video_url;
-    document.getElementById('player-video').load();
-  } else {
-    videoContainer.classList.add('d-none');
-  }
-
-  const done = playerData.completed_lesson_ids.includes(les.id);
-  const btn = document.getElementById('btn-complete');
-  btn.className = done ? 'btn btn-success btn-sm' : 'btn btn-arshith-reg btn-sm';
-  btn.innerHTML = done ? '<i class="fa-solid fa-check-circle me-1"></i> Completed ✓' : '<i class="fa-solid fa-circle-check me-1"></i> Mark as Complete';
+  const pdfUrl = mod.pdf_url || `/modules/${mod.module_id}/pdf/`;
+  document.getElementById('player-pdf-frame').src = pdfUrl;
+  document.getElementById('btn-pdf-view').href = pdfUrl;
+  document.getElementById('btn-pdf-download').href = `/modules/${mod.module_id}/pdf/download/`;
 }
 
-function navigateLesson(direction) {
-  selectLesson(currentIndex + direction);
+function navigateModule(direction) {
+  selectModule(currentIndex + direction);
 }
 
 async function toggleCompleteCurrentLesson() {
@@ -637,8 +601,8 @@ function renderExamResultScreen(res) {
         </div>
 
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-secondary flex-grow-1" onclick="loadPlayerData(); switchTab('lesson');">
-            <i class="fa-solid fa-book-open me-1"></i> Review Lessons
+          <button class="btn btn-outline-secondary flex-grow-1" onclick="loadPlayerData(); switchTab('pdf');">
+            <i class="fa-solid fa-file-pdf me-1"></i> Review Module PDF
           </button>
           <button class="btn btn-success flex-grow-1" onclick="startExamSession()">
             <i class="fa-solid fa-rotate-right me-1"></i> Retry Assessment
@@ -652,12 +616,14 @@ function renderExamResultScreen(res) {
 // --- TAB SWITCHING ---
 function switchTab(tabName) {
   currentTab = tabName;
-  ['lesson', 'exam', 'labs', 'interview', 'playground'].forEach(t => {
-    document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabName);
-    document.getElementById(`pane-${t}`).classList.toggle('d-none', t !== tabName);
+  ['pdf', 'exam', 'labs', 'interview', 'playground'].forEach(t => {
+    const btn = document.getElementById(`tab-btn-${t}`);
+    const pane = document.getElementById(`pane-${t}`);
+    if (btn) btn.classList.toggle('active', t === tabName);
+    if (pane) pane.classList.toggle('d-none', t !== tabName);
   });
-  if (tabName === 'exam' && !activeExamModuleId && allLessons.length > 0) {
-    loadModuleExam(allLessons[currentIndex].moduleId);
+  if (tabName === 'exam' && !activeExamModuleId && allModules.length > 0) {
+    loadModuleExam(allModules[currentIndex].module_id);
   }
 }
 
