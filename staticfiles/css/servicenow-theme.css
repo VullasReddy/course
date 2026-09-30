@@ -1,0 +1,493 @@
+/* ==========================================================================
+   ARSHITH ENTERPRISE LMS - PREMIUM PROFESSIONAL GREEN UI SYSTEM
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* Global Resets & Variables */
+:root {
+  --sn-emerald-dark: #042F2E;
+  --sn-emerald-deep: #064E3B;
+  --sn-emerald-primary: #059669;
+  --sn-emerald-hover: #047857;
+  --sn-mint-accent: #10B981;
+  --sn-mint-bright: #34D399;
+  --sn-light-bg: #F4FBF7;
+  --sn-card-bg: #FFFFFF;
+  --sn-border: #D1E7DD;
+  --sn-text-dark: #0F172A;
+  --sn-text-muted: #4B5563;
+  --sn-font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --sn-transition: all 0.25s ease-in-out;
+  --sn-shadow-sm: 0 2px 8px rgba(4, 120, 87, 0.08);
+  --sn-shadow-md: 0 10px 30px rgba(4, 120, 87, 0.12);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--sn-font);
+  background-color: var(--sn-light-bg);
+  color: var(--sn-text-dark);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   HEADER NAVBAR (No Bullets, Inline Flex Layout)
+   ========================================================================== */
+.arshith-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 3px solid var(--sn-emerald-primary);
+  box-shadow: 0 4px 20px rgba(6, 78, 59, 0.08);
+  padding: 0.85rem 2.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.arshith-navbar-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100%;
+}
+
+/* Left Brand Logo: ONLY "ARSHITH" */
+.arshith-brand-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  text-decoration: none !important;
+  color: var(--sn-emerald-dark) !important;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.arshith-brand-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--sn-emerald-deep) 0%, var(--sn-emerald-primary) 100%);
+  color: #FFFFFF !important;
+  border-radius: 10px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.arshith-brand-title {
+  color: var(--sn-emerald-deep) !important;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+/* Right Menu Nav Links (Strictly No Bullet Points!) */
+.arshith-nav-menu {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 2rem !important;
+  list-style: none !important;
+  list-style-type: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.arshith-nav-menu li {
+  list-style: none !important;
+  list-style-type: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.arshith-link {
+  color: #475569 !important;
+  text-decoration: none !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.25rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+  position: relative;
+}
+
+.arshith-link:hover {
+  color: var(--sn-emerald-primary) !important;
+  background-color: transparent !important;
+}
+
+.arshith-link.active {
+  color: var(--sn-emerald-deep) !important;
+  font-weight: 700;
+  background-color: transparent !important;
+}
+
+.arshith-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background-color: var(--sn-emerald-primary);
+  border-radius: 2px;
+}
+
+/* Auth & Action Buttons - Corporate Standard */
+.btn-arshith-reg {
+  background: var(--sn-emerald-primary) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--sn-emerald-primary) !important;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.btn-arshith-reg:hover {
+  background: var(--sn-emerald-hover) !important;
+  border-color: var(--sn-emerald-hover) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 8px rgba(4, 120, 87, 0.25);
+  transform: none;
+}
+
+.btn-arshith-log {
+  color: #374151 !important;
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.btn-arshith-log:hover {
+  background: #F9FAFB !important;
+  border-color: #9CA3AF !important;
+  color: #111827 !important;
+  transform: none;
+}
+
+
+/* ==========================================================================
+   HERO SECTION (Compact Enterprise UI)
+   ========================================================================== */
+.hero-emerald-banner {
+  background: 
+    radial-gradient(circle at 50% 0%, #065F46 0%, #042F2E 65%, #022C22 100%) !important;
+  color: #FFFFFF !important;
+  padding: 2.75rem 0 3rem 0 !important;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid var(--sn-mint-bright);
+}
+
+.hero-emerald-banner h1 {
+  color: #FFFFFF !important;
+  font-size: 2.2rem !important;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, #6EE7B7 0%, #34D399 50%, #A7F3D0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.hero-emerald-banner p {
+  color: #CBD5E1 !important;
+  font-size: 0.98rem !important;
+  line-height: 1.55;
+}
+
+.sn-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.85rem;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 9999px;
+  color: #34D399;
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.12);
+}
+
+/* Compact Hero Action Buttons */
+.btn-hero-primary {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.3rem;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(52, 211, 153, 0.4) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-hero-primary:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-hero-outline {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.3rem;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  backdrop-filter: blur(8px);
+}
+
+.btn-hero-outline:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+/* Compact Inline Stat Badges */
+.hero-stat-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: #E2E8F0;
+  transition: all 0.2s ease;
+}
+
+.hero-stat-badge:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #FFFFFF;
+}
+
+.hero-stat-badge i {
+  color: #34D399;
+  font-size: 0.95rem;
+}
+
+
+
+.hero-program-card {
+  background: rgba(4, 47, 46, 0.85) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.hero-course-item {
+  display: block;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease-in-out;
+  padding: 0.65rem 0.85rem;
+}
+
+.hero-course-item:hover {
+  background: rgba(5, 150, 105, 0.3);
+  border-color: rgba(52, 211, 153, 0.5);
+  transform: translateX(4px);
+}
+
+.hero-course-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--sn-emerald-deep);
+  color: var(--sn-mint-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.bg-emerald-light {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: var(--sn-mint-bright) !important;
+}
+
+
+/* Elevated Enterprise Cards */
+.enterprise-card, .springboard-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--sn-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--sn-shadow-sm) !important;
+  transition: var(--sn-transition) !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.enterprise-card:hover, .springboard-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--sn-shadow-md) !important;
+  border-color: var(--sn-emerald-primary) !important;
+}
+
+.enterprise-card-img, .springboard-card-img {
+  height: 200px !important;
+  width: 100% !important;
+  object-fit: cover !important;
+  display: block;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Green Category Badge */
+.badge-green-accent {
+  background-color: var(--sn-emerald-deep) !important;
+  color: #FFFFFF !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  display: inline-block;
+}
+
+.btn-springboard-primary {
+  background: var(--sn-emerald-primary) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--sn-emerald-primary) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-springboard-primary:hover {
+  background: var(--sn-emerald-hover) !important;
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   ENTERPRISE FOOTER SYSTEM
+   ========================================================================== */
+.arshith-footer {
+  background: #022C22 !important;
+  color: #94A3B8 !important;
+  border-top: 3px solid var(--sn-emerald-primary) !important;
+  font-size: 0.9rem;
+}
+
+.footer-heading {
+  color: #FFFFFF !important;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.footer-links {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.footer-links li {
+  margin-bottom: 0.65rem;
+}
+
+.footer-links a {
+  color: #94A3B8 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--sn-mint-bright) !important;
+  transform: translateX(3px);
+}
+
+.footer-social-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #E2E8F0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none !important;
+}
+
+.footer-social-btn:hover {
+  background: var(--sn-emerald-primary);
+  border-color: var(--sn-emerald-primary);
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+}
+
+.sub-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+
+
